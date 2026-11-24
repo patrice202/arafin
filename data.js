@@ -20,10 +20,10 @@ const ARAFIN_DATA = {
   // Conseil d'administration (associés commandités, Acte Constitutif art. 6)
   // photo : chemin de l'image, ou "" pour afficher les initiales en attendant la photo
   conseil: [
-    { nom: "Daniel Legros",        role: "Président",           photo: "" },
+    { nom: "Daniel Legros",        role: "Président",           photo: "images/daniel-legros.jpg" },
     { nom: "Antonio Saintilmond",  role: "Vice-Président",      photo: "images/antonio-saintilmond.jpg" },
     { nom: "Olivier Soifaite",     role: "Secrétaire Général",  photo: "images/olivier-soifaite.jpg" },
     { nom: "Andy Adolphe",         role: "Trésorier",           photo: "" },
-    { nom: "Kenny Alcide",         role: "Conseiller Technique", photo: "" }
+    { nom: "Kenny Alcide",         role: "Conseiller Technique", photo: "images/kenny-alcide.jpg" }
   ]
 };
