@@ -438,3 +438,32 @@ h2.center, .center { text-align: center; }
 /* Bouton Espace Conseil : icône « compte » seule (style Ford) */
 .nav-cta { padding: 10px 14px; }
 .nav-cta svg { display: block; }
+/* ---------- Hero mosaïque (style Ford) ---------- */
+.mz { position: relative; display: grid; gap: 14px; padding-top: 34px;
+  grid-template-columns: repeat(5, 1fr); grid-template-rows: 190px 190px;
+  grid-template-areas: "t1 t2 t3 t4 t4" "t1 t5 t3 t6 t7"; }
+.mz-tile { overflow: hidden; background: var(--green-900); }
+.mz-tile img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .35s ease; }
+.mz.fading .mz-tile img { opacity: 0; }
+.mz-t1 { grid-area: t1; border-radius: 999px; }
+.mz-t2 { grid-area: t2; border-radius: 42px; }
+.mz-t3 { grid-area: t3; border-radius: 999px; }
+.mz-t4 { grid-area: t4; border-radius: 999px; }
+.mz-t5 { grid-area: t5; border-radius: 50%; }
+.mz-t6 { grid-area: t6; border-radius: 42px; }
+.mz-t7 { grid-area: t7; border-radius: 999px; }
+.mz-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 4;
+  width: 46px; height: 46px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.45); background: rgba(6,35,26,.55);
+  color: #fff; font-size: 1.7rem; line-height: 1; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; }
+.mz-arrow:hover { background: rgba(6,35,26,.85); }
+.mz-prev { left: 10px; }
+.mz-next { right: 10px; }
+.hero .hero-content { padding: 48px 0 60px; }
+@media (max-width: 760px) {
+  .mz { grid-template-columns: repeat(3, 1fr); grid-template-rows: 130px 130px;
+    grid-template-areas: "t1 t2 t3" "t1 t4 t3"; gap: 10px; }
+  .mz-t5, .mz-t6, .mz-t7 { display: none; }
+  .mz-arrow { width: 38px; height: 38px; font-size: 1.4rem; }
+}

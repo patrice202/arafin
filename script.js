@@ -129,3 +129,40 @@ function activerAnimations() {
   }
   afficher(data || donneesSecours());
 })();
+// ---------- Mosaïque du hero (style Ford) ----------
+(function () {
+  const box = document.getElementById("mz");
+  if (!box) return;
+  const imgs = box.querySelectorAll(".mz-tile img");
+  const pool = [
+    "images/hero.jpg", "images/motoculteur-orange.jpg", "images/paysan.jpg",
+    "images/recolte-riz.jpg", "images/champ.jpg", "images/tricycle-bleu-champ.jpg",
+    "images/tricycle-rouge.jpg", "images/motoculteur-rouge.jpg", "images/recolte.jpg",
+    "images/tricycle-bleu.jpg"
+  ];
+  let start = 0, timer = null;
+  pool.forEach(s => { const i = new Image(); i.src = s; });
+  function montrer() {
+    imgs.forEach((img, k) => { img.src = pool[(start + k) % pool.length]; });
+  }
+  function tourner(sens) {
+    box.classList.add("fading");
+    setTimeout(() => {
+      start = (start + sens * imgs.length + pool.length * 7) % pool.length;
+      montrer();
+      box.classList.remove("fading");
+    }, 360);
+  }
+  function relancer() { clearInterval(timer); timer = setInterval(() => tourner(1), 6000); }
+  box.querySelector(".mz-next").addEventListener("click", () => { tourner(1); relancer(); });
+  box.querySelector(".mz-prev").addEventListener("click", () => { tourner(-1); relancer(); });
+  let x0 = null;
+  box.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive: true });
+  box.addEventListener("touchend", e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 40) { tourner(dx < 0 ? 1 : -1); relancer(); }
+    x0 = null;
+  }, { passive: true });
+  relancer();
+})();
