@@ -435,3 +435,6 @@ h2.center, .center { text-align: center; }
   .hero-content { padding: 70px 24px 60px; }
   .nav { gap: 16px; }
 }
+/* Bouton Espace Conseil : icône « compte » seule (style Ford) */
+.nav-cta { padding: 10px 14px; }
+.nav-cta svg { display: block; }
