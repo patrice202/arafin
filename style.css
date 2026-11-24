@@ -488,3 +488,32 @@ h2.center, .center { text-align: center; }
   content: "•"; position: absolute; left: 2px; top: 0;
   color: var(--gold); font-weight: 700;
 }
+/* ---------- Mosaïque v3 : 5 photos, sans étiquettes ---------- */
+.mz {
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 190px 190px;
+  grid-template-areas: "t1 t2 t3 t4" "t1 t5 t3 t4";
+}
+@media (max-width: 760px) {
+  .mz {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 110px 110px;
+    grid-template-areas: "t1 t2 t3" "t1 t4 t3";
+  }
+  .mz-tile.mz-t5 { display: none; }
+}
+/* ---------- Mosaïque v3 : 5 photos, sans étiquettes ---------- */
+.mz {
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 190px 190px;
+  grid-template-areas: "t1 t2 t3 t4" "t1 t5 t3 t4";
+}
+@media (max-width: 760px) {
+  .mz {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 110px 110px;
+    grid-template-areas: "t1 t2 t3" "t1 t4 t3";
+  }
+  .mz-tile.mz-t5 { display: none; }
+}
+

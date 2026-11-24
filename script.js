@@ -135,37 +135,29 @@ function activerAnimations() {
   }
   afficher(data || donneesSecours());
 })();
-// ---------- Mosaïque du hero : rotation par thème ----------
+// ---------- Mosaïque du hero : 5 photos ----------
 (function () {
   const box = document.getElementById("mz");
   if (!box) return;
-  const tiles = box.querySelectorAll(".mz-tile");
-  // Chaque tuile garde son thème : les photos tournent sans changer de place.
-  const pools = [
-    ["images/paysan.jpg", "images/recolte-riz.jpg"],                    // Les producteurs
-    ["images/motoculteur-orange.jpg", "images/motoculteur-rouge.jpg"], // La mécanisation
-    ["images/champ.jpg"],                                               // La terre
-    ["images/recolte-riz.jpg", "images/paysan.jpg"],                    // Les récoltes
-    ["images/tricycle-bleu.jpg", "images/tricycle-rouge.jpg"],          // Le transport
-    ["images/motoculteur-rouge.jpg", "images/tricycle-bleu.jpg"],       // Les équipements
-    ["images/hero.jpg", "images/champ.jpg"]                             // Les marchés
+  const imgs = box.querySelectorAll(".mz-tile img");
+  const pool = [
+    "images/suivi-cultures.jpg", "images/jeunes-plants.jpg", "images/parcelle-soleil.jpg",
+    "images/elevage-chevreau.jpg", "images/troupeau-chevres.jpg"
   ];
-  const pos = pools.map(() => 0);
-  pools.flat().forEach(s => { const i = new Image(); i.src = s; });
-  let timer = null;
+  let start = 0, timer = null;
+  pool.forEach(s => { const i = new Image(); i.src = s; });
+  function montrer() {
+    imgs.forEach((img, k) => { img.src = pool[(start + k) % pool.length]; });
+  }
   function tourner(sens) {
     box.classList.add("fading");
     setTimeout(() => {
-      tiles.forEach((tile, k) => {
-        const p = pools[k];
-        if (!p || p.length < 2) return;
-        pos[k] = (pos[k] + sens + p.length) % p.length;
-        tile.querySelector("img").src = p[pos[k]];
-      });
+      start = (start + sens + pool.length) % pool.length;
+      montrer();
       box.classList.remove("fading");
     }, 360);
   }
-  function relancer() { clearInterval(timer); timer = setInterval(() => tourner(1), 7000); }
+  function relancer() { clearInterval(timer); timer = setInterval(() => tourner(1), 6000); }
   box.querySelector(".mz-next").addEventListener("click", () => { tourner(1); relancer(); });
   box.querySelector(".mz-prev").addEventListener("click", () => { tourner(-1); relancer(); });
   let x0 = null;
