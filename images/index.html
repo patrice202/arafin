@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARAFIN — ARTI Agro Finance | Agro-finance en Haïti</title>
+  <meta name="description" content="ARAFIN (ARTI Agro Finance) est une société en commandite simple fondée en 2026 à Port-au-Prince, Haïti : intermédiation financière, affermage, incubation et financement de projets agricoles, production, transformation et commercialisation.">
+  <meta name="theme-color" content="#0a3524">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <meta property="og:title" content="ARAFIN — ARTI Agro Finance | Agro-finance en Haïti">
+  <meta property="og:description" content="Société en commandite simple fondée en 2026 à Port-au-Prince. Intermédiation financière, affermage, incubation et financement de projets agricoles en Haïti.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://patrice202.github.io/arafin/">
+  <meta property="og:image" content="https://patrice202.github.io/arafin/images/hero.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+ 
+  <!-- Bandeau d'annonce (rempli par script.js depuis Firestore, sinon data.js) -->
+  <div id="annonce" class="annonce" hidden></div>
+ 
+  <!-- ============ EN-TÊTE ============ -->
+  <header class="header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#accueil">
+        <span class="brand-mark">A</span>
+        <span class="brand-name">ARAFIN<small>ARTI AGRO FINANCE</small></span>
+      </a>
+      <nav class="nav">
+        <a href="#apropos">À propos</a>
+        <a href="#approche">Approche</a>
+        <a href="#services">Services</a>
+        <a href="#conseil">C.A</a>
+        <a href="#contact">Contact</a>
+        <a class="nav-cta" href="admin.html" title="Espace Conseil" aria-label="Espace Conseil"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg></a>
+      </nav>
+    </div>
+  </header>
+ 
+  <!-- ============ HERO ============ -->
+  <section id="accueil" class="hero">
+  <div class="wrap">
+    <div class="mz" id="mz">
+      <div class="mz-tile mz-t1"><img src="images/suivi-cultures.jpg" alt="Technicien agricole prenant des notes dans un champ"></div>
+      <div class="mz-tile mz-t2"><img src="images/jeunes-plants.jpg" alt="Jeunes plants de piment dans une parcelle"></div>
+      <div class="mz-tile mz-t3"><img src="images/parcelle-soleil.jpg" alt="Parcelle agricole préparée sous le soleil"></div>
+      <div class="mz-tile mz-t4"><img src="images/elevage-chevreau.jpg" alt="Éleveur tenant un chevreau parmi son troupeau"></div>
+      <div class="mz-tile mz-t5"><img src="images/troupeau-chevres.jpg" alt="Troupeau de chèvres sous un abri de ferme"></div>
+      <button class="mz-arrow mz-prev" type="button" aria-label="Images précédentes">‹</button>
+      <button class="mz-arrow mz-next" type="button" aria-label="Images suivantes">›</button>
+    </div>
+    <div class="hero-content">
+      <p class="kicker reveal">Agro-finance · Haïti</p>
+      <h1 class="reveal">Financer ceux qui cultivent<br><em>la terre haïtienne</em></h1>
+      <p class="hero-sub reveal">ARAFIN — ARTI Agro Finance — est une société en commandite simple
+      fondée en 2026. Elle met en relation les investisseurs et les
+      institutions financières avec les producteurs agricoles haïtiens, organise l'affermage des
+      terres que leurs propriétaires ne peuvent pas exploiter seuls, et accompagne les projets de
+      production, de transformation et de commercialisation.</p>
+      <div class="hero-cta reveal">
+        <a class="btn btn-gold" href="#services">Découvrir nos services</a>
+        <a class="btn btn-ghost" href="#conseil">Rencontrer le conseil</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-facts">
+    <div class="wrap hero-facts-inner">
+      <div><strong>2026</strong><span>Année de fondation</span></div>
+      <div><strong>SCS</strong><span>Société en commandite simple</span></div>
+      <div><strong>10</strong><span>Associés fondateurs</span></div>
+      <div><strong>Port-au-Prince</strong><span>Siège de la société</span></div>
+    </div>
+  </div>
+</section>
+
+ 
+  <!-- ============ À PROPOS ============ -->
+  <section id="apropos" class="section">
+    <div class="wrap about-grid">
+      <div class="about-photo reveal">
+        <img src="images/champ.jpg" alt="Un producteur haïtien au travail dans un champ de maïs">
+        <div class="about-badge">Welcome</div>
+      </div>
+      <div class="about-text reveal">
+        <p class="kicker kicker-dark">À propos</p>
+        <h2>Une société haïtienne dédiée<br>au financement agricole</h2>
+        <p>ARTI Agro Finance — <strong>ARAFIN</strong> — est une société en commandite simple (SCS)
+        constituée en 2026 à Port-au-Prince par dix associés haïtiens. Son objet, défini
+        par son acte constitutif, couvre l'ensemble de la chaîne agricole : de l'intermédiation
+        financière jusqu'à la commercialisation des produits.</p>
+        <p>En Haïti, de nombreux producteurs possèdent des terres qu'ils ne peuvent pas mettre
+        pleinement en valeur, faute de financement, d'équipement et d'appui technique. La plaine
+        de l'Artibonite, grenier agricole du pays, en est l'exemple le plus connu. ARAFIN a été
+        créée pour traiter ce problème précis : repérer ces situations, documenter les projets
+        et les présenter aux investisseurs et aux institutions susceptibles de les financer.</p>
+        <ul class="check-list">
+          <li>Intermédiation entre investisseurs, institutions financières et producteurs</li>
+          <li>Organisation de l'affermage de terres agricoles sous-exploitées</li>
+          <li>Incubation et financement de projets, avec appui technique et formation</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ============ APPROCHE ============ -->
+  <section id="approche" class="section section-sage">
+    <div class="wrap">
+      <p class="kicker kicker-dark center reveal">Notre approche</p>
+      <h2 class="center reveal">Quatre étapes, du projet à la commercialisation</h2>
+      <div class="steps">
+        <div class="step reveal">
+          <span class="step-num">01</span>
+          <h3>Identifier</h3>
+          <p>Nous repérons les terres sous-exploitées et les producteurs concernés, puis nous étudions chaque projet sur place : surfaces, cultures possibles, besoins en équipement et en main-d'œuvre.</p>
+        </div>
+        <div class="step reveal">
+          <span class="step-num">02</span>
+          <h3>Financer</h3>
+          <p>Nous constituons le dossier du projet, nous le présentons aux investisseurs et aux institutions financières, et nous organisons le montage du financement.</p>
+        </div>
+        <div class="step reveal">
+          <span class="step-num">03</span>
+          <h3>Accompagner</h3>
+          <p>Pendant la mise en œuvre, nous assurons le suivi technique du projet et la formation des bénéficiaires, jusqu'à la récolte.</p>
+        </div>
+        <div class="step reveal">
+          <span class="step-num">04</span>
+          <h3>Commercialiser</h3>
+          <p>Nous organisons la transformation des produits et leur mise en marché, sur le marché local et à l'exportation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ============ SERVICES ============ -->
+  <section id="services" class="section">
+    <div class="wrap">
+      <p class="kicker kicker-dark center reveal">Nos services</p>
+      <h2 class="center reveal">L'objet social d'ARAFIN</h2>
+      <div class="cards">
+        <article class="card reveal">
+          <div class="card-icon">01</div>
+          <h3>Intermédiation financière</h3>
+          <p>Mise en relation entre investisseurs, institutions financières et producteurs agricoles.
+          Dans ce cadre, ARAFIN organise également l'affermage : la terre d'un paysan qui n'a ni les
+          fonds ni l'équipement pour l'exploiter est louée et mise en valeur par la culture et la
+          mécanisation, au lieu de rester en friche.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card-icon">02</div>
+          <h3>Incubation &amp; financement</h3>
+          <p>Incubation et financement de projets agricoles et agroalimentaires, avec accompagnement
+          technique et formation des porteurs de projet et des bénéficiaires.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card-icon">03</div>
+          <h3>Production &amp; transformation</h3>
+          <p>Mise en place de structures de production et de transformation des produits agricoles,
+          afin qu'une plus grande part de la valeur soit créée et conservée en Haïti.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card-icon">04</div>
+          <h3>Commercialisation &amp; export</h3>
+          <p>Commercialisation des produits agricoles sur le marché local et à l'exportation,
+          au bénéfice des producteurs, de leurs familles et de leurs communautés.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ============ CITATION ============ -->
+  <section class="quote-band">
+    <div class="wrap reveal">
+      <p class="quote">« L'agriculture fait vivre une grande partie des Haïtiens, mais le
+      financement atteint rarement ceux qui cultivent. ARAFIN a été créée pour combler
+      cet écart. »</p>
+      <p class="quote-by">— ARAFIN · ARTI Agro Finance, Port-au-Prince</p>
+    </div>
+  </section>
+ 
+  <!-- ============ CONSEIL ============ -->
+  <section id="conseil" class="section section-cream">
+    <div class="wrap">
+      <p class="kicker kicker-dark center reveal">Gouvernance</p>
+      <h2 class="center reveal">Conseil d'Administration</h2>
+      <p class="section-sub reveal">Les associés commandités d'ARAFIN.</p>
+      <div id="conseil-grid" class="conseil-grid"></div>
+    </div>
+  </section>
+ 
+  <!-- ============ APPEL À L'ACTION ============ -->
+  <section class="cta-band">
+    <div class="wrap reveal">
+      <h2>Producteurs, investisseurs, institutions</h2>
+      <p>ARAFIN est en phase de lancement et prépare ses premières opérations.
+      Présentez-nous votre projet ou votre intérêt, nous étudierons chaque demande.</p>
+      <a class="btn btn-gold" href="#contact">Entrer en contact</a>
+    </div>
+  </section>
+ 
+  <!-- ============ CONTACT ============ -->
+  <section id="contact" class="section">
+    <div class="wrap contact-grid">
+      <div class="reveal">
+        <p class="kicker kicker-dark">Contact</p>
+        <h2>Parlons de votre projet</h2>
+        <p class="contact-text">Écrivez-nous ou passez par un membre du conseil d'administration —
+        nous répondons à chaque demande sérieuse.</p>
+      </div>
+      <div id="contact-infos" class="contact-infos reveal"></div>
+    </div>
+  </section>
+ 
+  <!-- ============ PIED DE PAGE ============ -->
+  <footer class="footer">
+    <div class="wrap footer-grid">
+      <div>
+        <a class="brand brand-light" href="#accueil">
+          <span class="brand-mark">A</span>
+          <span class="brand-name">ARAFIN<small>ARTI AGRO FINANCE</small></span>
+        </a>
+        <p class="footer-text">Société en Commandite Simple fondée en 2026.
+        Agro-finance, incubation et commercialisation au service des producteurs haïtiens.</p>
+      </div>
+      <div>
+        <h4>Navigation</h4>
+        <a href="#apropos">À propos</a>
+        <a href="#approche">Approche</a>
+        <a href="#services">Services</a>
+        <a href="#conseil">Conseil</a>
+      </div>
+      <div>
+        <h4>Société</h4>
+        <a href="#contact">Contact</a>
+        <a href="admin.html">Espace Conseil</a>
+        <p class="footer-text">Port-au-Prince, Haïti</p>
+      </div>
+    </div>
+    <div class="wrap footer-legal">
+      <h4>Mentions légales</h4>
+      <p><strong>ARAFIN — ARTI Agro Finance.</strong> Forme juridique : In Progress...
+      Objet : intermédiation financière entre investisseurs, institutions financières et
+      producteurs agricoles haïtiens ; incubation et financement de projets agricoles et
+      agroalimentaires ; production, transformation et commercialisation de produits
+      agricoles, sur le marché local et à l'exportation.</p>
+      <p>Photographies d'illustration : Kendra Helmer / USAID et Ben Edwards / USAID
+      (domaine public) ; Vic Hinterlang / SOIL, Haïti (licence CC BY 2.0) — via Wikimedia
+      Commons. Elles illustrent l'agriculture haïtienne et ne représentent pas les activités
+      d'ARAFIN.</p>
+    </div>
+    <div class="wrap footer-bottom">
+      <p>ARAFIN — ARTI Agro Finance · Société en Commandite Simple · Port-au-Prince, Haïti · © 2026</p>
+    </div>
+  </footer>
+ 
+  <script src="data.js"></script>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
