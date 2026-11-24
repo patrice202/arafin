@@ -129,31 +129,37 @@ function activerAnimations() {
   }
   afficher(data || donneesSecours());
 })();
-// ---------- Mosaïque du hero (style Ford) ----------
+// ---------- Mosaïque du hero : rotation par thème ----------
 (function () {
   const box = document.getElementById("mz");
   if (!box) return;
-  const imgs = box.querySelectorAll(".mz-tile img");
-  const pool = [
-    "images/hero.jpg", "images/motoculteur-orange.jpg", "images/paysan.jpg",
-    "images/recolte-riz.jpg", "images/champ.jpg", "images/tricycle-bleu-champ.jpg",
-    "images/tricycle-rouge.jpg", "images/motoculteur-rouge.jpg", "images/recolte.jpg",
-    "images/tricycle-bleu.jpg"
+  const tiles = box.querySelectorAll(".mz-tile");
+  // Chaque tuile garde son thème : les photos tournent sans changer de place.
+  const pools = [
+    ["images/paysan.jpg", "images/recolte-riz.jpg"],                    // Les producteurs
+    ["images/motoculteur-orange.jpg", "images/motoculteur-rouge.jpg"], // La mécanisation
+    ["images/champ.jpg"],                                               // La terre
+    ["images/recolte-riz.jpg", "images/paysan.jpg"],                    // Les récoltes
+    ["images/tricycle-bleu.jpg", "images/tricycle-rouge.jpg"],          // Le transport
+    ["images/motoculteur-rouge.jpg", "images/tricycle-bleu.jpg"],       // Les équipements
+    ["images/hero.jpg", "images/champ.jpg"]                             // Les marchés
   ];
-  let start = 0, timer = null;
-  pool.forEach(s => { const i = new Image(); i.src = s; });
-  function montrer() {
-    imgs.forEach((img, k) => { img.src = pool[(start + k) % pool.length]; });
-  }
+  const pos = pools.map(() => 0);
+  pools.flat().forEach(s => { const i = new Image(); i.src = s; });
+  let timer = null;
   function tourner(sens) {
     box.classList.add("fading");
     setTimeout(() => {
-      start = (start + sens * imgs.length + pool.length * 7) % pool.length;
-      montrer();
+      tiles.forEach((tile, k) => {
+        const p = pools[k];
+        if (!p || p.length < 2) return;
+        pos[k] = (pos[k] + sens + p.length) % p.length;
+        tile.querySelector("img").src = p[pos[k]];
+      });
       box.classList.remove("fading");
     }, 360);
   }
-  function relancer() { clearInterval(timer); timer = setInterval(() => tourner(1), 6000); }
+  function relancer() { clearInterval(timer); timer = setInterval(() => tourner(1), 7000); }
   box.querySelector(".mz-next").addEventListener("click", () => { tourner(1); relancer(); });
   box.querySelector(".mz-prev").addEventListener("click", () => { tourner(-1); relancer(); });
   let x0 = null;
