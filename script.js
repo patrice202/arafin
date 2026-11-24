@@ -82,7 +82,13 @@ function afficher(data) {
       ? `<img src="${echapper(m.photo)}" alt="Photo de ${echapper(m.nom)}">`
       : `<div class="initiales">${echapper(initiales(m.nom))}</div>`;
     const attente = aPhoto ? "" : `<span class="attente">Photo à venir</span>`;
-    const bio = (m.bio && m.bio.trim() !== "") ? `<p class="bio">${echapper(m.bio)}</p>` : "";
+const morceaux = (m.bio || "").split(/\n|•/).map(s => s.trim()).filter(s => s !== "");
+let bio = "";
+if (morceaux.length > 1) {
+  bio = `<ul class="bio-list">${morceaux.map(s => `<li>${echapper(s)}</li>`).join("")}</ul>`;
+} else if (morceaux.length === 1) {
+  bio = `<p class="bio">${echapper(morceaux[0])}</p>`;
+}
     div.innerHTML = `${photo}<h3>${echapper(m.nom)}</h3><p class="role">${echapper(m.role)}</p>${attente}${bio}`;
     grid.appendChild(div);
   });
