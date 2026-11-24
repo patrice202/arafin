@@ -19,7 +19,7 @@ import {
 import { firebaseConfig } from "./firebase-config.js";
 
 // Comptes administrateurs (peuvent tout modifier : annonce, contacts, fiches des membres)
-const ADMIN_EMAILS = ["antoniosaintilmond1@gmail.com"];
+const ADMIN_EMAILS = ["antoniosaintilmond1@gmail.com", "daniellegros02@gmail.com"];
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
