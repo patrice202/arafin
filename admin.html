@@ -8,59 +8,106 @@
 </head>
 <body class="admin-body">
  
-  <!-- Connexion -->
+  <!-- Connexion (compte individuel Firebase) -->
   <div id="login-box" class="admin-box">
     <h1>🔒 Espace Conseil — ARAFIN</h1>
-    <p>Réservé aux membres du conseil d'administration. Entre le mot de passe pour modifier le site.</p>
-    <label for="mdp">Mot de passe</label>
-    <input type="password" id="mdp" placeholder="Mot de passe du conseil">
+    <p>Réservé aux membres du conseil d'administration. Connecte-toi avec ton adresse
+    email et ton mot de passe personnels.</p>
+    <label for="login-email">Adresse email</label>
+    <input type="email" id="login-email" placeholder="ton@email.com" autocomplete="email">
+    <label for="login-mdp">Mot de passe</label>
+    <input type="password" id="login-mdp" placeholder="Ton mot de passe" autocomplete="current-password">
     <div class="admin-row">
-      <button class="btn btn-green" id="btn-login">Entrer</button>
+      <button class="btn btn-green" id="btn-login">Se connecter</button>
       <a class="btn btn-light" style="color:var(--vert);border-color:var(--vert)" href="index.html">← Retour au site</a>
     </div>
+    <p style="margin-top:14px"><a href="#" id="lien-oublie">Mot de passe oublié ?</a>
+    — un email de réinitialisation te sera envoyé.</p>
     <p id="login-msg" class="msg" style="color:#b91c1c"></p>
   </div>
  
-  <!-- Éditeur -->
-  <div id="editor-box" class="admin-box" hidden>
-    <h1>✏️ Modifier le site ARAFIN</h1>
-    <p>Tes modifications s'enregistrent sur cet ordinateur. Pour les publier pour tout le monde :
-    clique « Télécharger data.js » puis remplace le fichier data.js sur GitHub par le nouveau.</p>
+  <!-- Espace membre (visible après connexion) -->
+  <div id="app-box" class="admin-box" hidden>
+    <h1>✏️ Espace Conseil — ARAFIN</h1>
+    <p>Connecté : <strong id="user-email"></strong>
+    <button class="btn btn-outline" style="color:var(--vert)!important;padding:8px 16px;font-size:.9rem" id="btn-logout">Se déconnecter</button></p>
+    <p>Tes modifications sont publiées <strong>immédiatement</strong> sur le site, pour tout le monde.</p>
+    <p id="app-msg" class="msg"></p>
  
-    <h2>Bandeau d'annonce</h2>
-    <label for="f-annonce">Texte de l'annonce (vide = pas de bandeau)</label>
-    <textarea id="f-annonce"></textarea>
- 
-    <h2>Contact public</h2>
-    <label for="f-ville">Ville</label>
-    <input type="text" id="f-ville">
-    <label for="f-email">Email officiel (optionnel)</label>
-    <input type="text" id="f-email" placeholder="ex : contact@arafin.ht">
-    <label for="f-tel">Téléphone officiel (optionnel)</label>
-    <input type="text" id="f-tel" placeholder="ex : +509 ....">
- 
-    <h2>Conseil d'administration</h2>
-    <div id="membres-edit"></div>
-    <div class="admin-row">
-      <button class="btn btn-outline" style="color:var(--vert)!important" id="btn-ajouter">+ Ajouter un membre</button>
+    <!-- Ma fiche -->
+    <div id="ma-fiche-box">
+      <h2>Ma fiche sur le site</h2>
+      <div class="membre-edit">
+        <p style="margin:0"><strong id="mon-nom"></strong> — <span id="mon-role"></span></p>
+        <img id="ma-photo-apercu" alt="" hidden>
+        <label for="ma-photo">Ma photo (elle sera réduite automatiquement)</label>
+        <input type="file" id="ma-photo" accept="image/*">
+        <label for="ma-bio">Ma biographie courte (optionnel — affichée sous mon rôle sur le site)</label>
+        <textarea id="ma-bio" rows="3" placeholder="Ex : parcours, fonction, domaine d'expertise…"></textarea>
+        <div class="admin-row">
+          <button class="btn btn-green" id="btn-save-fiche">💾 Enregistrer ma fiche</button>
+        </div>
+        <p id="fiche-msg" class="msg"></p>
+      </div>
     </div>
  
-    <div class="admin-row">
-      <button class="btn btn-green" id="btn-save">💾 Enregistrer (cet ordinateur)</button>
-      <button class="btn btn-gold" id="btn-download">⬇️ Télécharger data.js (publier)</button>
-      <button class="btn btn-danger" id="btn-reset">Réinitialiser</button>
+    <div id="non-associe-box" class="admin-note" hidden>
+      Ton compte n'est associé à aucune fiche du conseil pour le moment.
+      Demande à l'administrateur du site d'ajouter ton adresse email à ta fiche.
     </div>
-    <p id="save-msg" class="msg"></p>
  
-    <div class="admin-note">
-      <strong>Comment un membre ajoute sa photo :</strong> il ouvre cette page sur son ordinateur,
-      entre le mot de passe du conseil, clique « Choisir une photo » sous son nom, enregistre,
-      télécharge le nouveau <em>data.js</em> et l'envoie à la personne qui gère le GitHub du site —
-      ou le remplace lui-même sur GitHub s'il y a accès. La photo voyage dans le fichier, rien d'autre à faire.
+    <!-- Mon compte -->
+    <h2>Mon compte</h2>
+    <div class="membre-edit">
+      <p style="margin:0">Adresse email du compte : <strong id="mon-email"></strong></p>
+      <label for="mdp-actuel">Mot de passe actuel</label>
+      <input type="password" id="mdp-actuel" autocomplete="current-password">
+      <label for="mdp-nouveau">Nouveau mot de passe (6 caractères minimum)</label>
+      <input type="password" id="mdp-nouveau" autocomplete="new-password">
+      <label for="mdp-confirme">Confirmer le nouveau mot de passe</label>
+      <input type="password" id="mdp-confirme" autocomplete="new-password">
+      <div class="admin-row">
+        <button class="btn btn-green" id="btn-change-mdp">Changer mon mot de passe</button>
+      </div>
+      <p id="compte-msg" class="msg"></p>
+    </div>
+ 
+    <!-- ===== Administration (visible uniquement pour l'administrateur) ===== -->
+    <div id="admin-zone" hidden>
+      <h2>Administration — Annonce et contacts</h2>
+      <label for="f-annonce">Texte de l'annonce (vide = pas de bandeau)</label>
+      <textarea id="f-annonce"></textarea>
+      <label for="f-adresse">Adresse publique</label>
+      <input type="text" id="f-adresse">
+      <label for="f-email">Email officiel (optionnel)</label>
+      <input type="email" id="f-email" placeholder="ex : contact@arafinhaiti.com">
+      <label for="f-whatsapp">WhatsApp officiel (optionnel)</label>
+      <input type="text" id="f-whatsapp" placeholder="ex : +509 ....">
+      <div class="admin-row">
+        <button class="btn btn-green" id="btn-save-site">💾 Enregistrer l'annonce et les contacts</button>
+      </div>
+      <p id="site-msg" class="msg"></p>
+ 
+      <h2>Administration — Membres du conseil</h2>
+      <p>Le champ « email » relie la fiche au compte de connexion du membre :
+      il doit être identique à l'adresse du compte créé dans Firebase.</p>
+      <div id="membres-edit"></div>
+ 
+      <h2>Administration — Base de données</h2>
+      <div class="admin-note">
+        <strong>Initialiser la base de données :</strong> si la base Firestore est encore vide,
+        ce bouton y copie les membres et les coordonnées actuels de data.js.
+        Ensuite, les emails des membres se remplissent dans la liste ci-dessus,
+        et chaque membre doit avoir un compte créé dans la console Firebase (Authentication).
+        <div class="admin-row">
+          <button class="btn btn-gold" id="btn-seed">Initialiser la base de données</button>
+        </div>
+        <p id="seed-msg" class="msg"></p>
+      </div>
     </div>
   </div>
  
   <script src="data.js"></script>
-  <script src="admin.js"></script>
+  <script type="module" src="admin.js"></script>
 </body>
 </html>
