@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Espace Conseil — ARAFIN</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="admin-body">
+ 
+  <!-- Connexion -->
+  <div id="login-box" class="admin-box">
+    <h1>🔒 Espace Conseil — ARAFIN</h1>
+    <p>Réservé aux membres du conseil d'administration. Entre le mot de passe pour modifier le site.</p>
+    <label for="mdp">Mot de passe</label>
+    <input type="password" id="mdp" placeholder="Mot de passe du conseil">
+    <div class="admin-row">
+      <button class="btn btn-green" id="btn-login">Entrer</button>
+      <a class="btn btn-light" style="color:var(--vert);border-color:var(--vert)" href="index.html">← Retour au site</a>
+    </div>
+    <p id="login-msg" class="msg" style="color:#b91c1c"></p>
+  </div>
+ 
+  <!-- Éditeur -->
+  <div id="editor-box" class="admin-box" hidden>
+    <h1>✏️ Modifier le site ARAFIN</h1>
+    <p>Tes modifications s'enregistrent sur cet ordinateur. Pour les publier pour tout le monde :
+    clique « Télécharger data.js » puis remplace le fichier data.js sur GitHub par le nouveau.</p>
+ 
+    <h2>Bandeau d'annonce</h2>
+    <label for="f-annonce">Texte de l'annonce (vide = pas de bandeau)</label>
+    <textarea id="f-annonce"></textarea>
+ 
+    <h2>Contact public</h2>
+    <label for="f-ville">Ville</label>
+    <input type="text" id="f-ville">
+    <label for="f-email">Email officiel (optionnel)</label>
+    <input type="text" id="f-email" placeholder="ex : contact@arafin.ht">
+    <label for="f-tel">Téléphone officiel (optionnel)</label>
+    <input type="text" id="f-tel" placeholder="ex : +509 ....">
+ 
+    <h2>Conseil d'administration</h2>
+    <div id="membres-edit"></div>
+    <div class="admin-row">
+      <button class="btn btn-outline" style="color:var(--vert)!important" id="btn-ajouter">+ Ajouter un membre</button>
+    </div>
+ 
+    <div class="admin-row">
+      <button class="btn btn-green" id="btn-save">💾 Enregistrer (cet ordinateur)</button>
+      <button class="btn btn-gold" id="btn-download">⬇️ Télécharger data.js (publier)</button>
+      <button class="btn btn-danger" id="btn-reset">Réinitialiser</button>
+    </div>
+    <p id="save-msg" class="msg"></p>
+ 
+    <div class="admin-note">
+      <strong>Comment un membre ajoute sa photo :</strong> il ouvre cette page sur son ordinateur,
+      entre le mot de passe du conseil, clique « Choisir une photo » sous son nom, enregistre,
+      télécharge le nouveau <em>data.js</em> et l'envoie à la personne qui gère le GitHub du site —
+      ou le remplace lui-même sur GitHub s'il y a accès. La photo voyage dans le fichier, rien d'autre à faire.
+    </div>
+  </div>
+ 
+  <script src="data.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
