@@ -24,6 +24,15 @@ const ARAFIN_DATA = {
     { nom: "Antonio Saintilmond",  role: "Vice-Président",      photo: "images/antonio-saintilmond.jpg" },
     { nom: "Olivier Soifaite",     role: "Secrétaire Général",  photo: "images/olivier-soifaite.jpg" },
     { nom: "Andy Adolphe",         role: "Trésorier",           photo: "" },
-    { nom: "Kenny Alcide",         role: "Conseiller Technique", photo: "images/kenny-alcide.jpg" }
-  ]
+  { nom: "Kenny Alcide",         role: "Conseiller Technique", photo: "images/kenny-alcide.jpg" }
+],
+
+// Associés fondateurs (associés commanditaires, Acte Constitutif)
+associes: [
+  { nom: "Djenika Neylan",                role: "Resp. des Ressources Humaines", photo: "" },
+  { nom: "Styvenson Jerry Adler Baubrun", role: "Resp. Informaticque",        photo: "" },
+  { nom: "Dessailly Youvens Revangile",   role: "Comptable Adjoint",   photo: "" },
+  { nom: "Wood-Alens K. B. Alexandre",    role: "Responsable de la Gestion",             photo: "" },
+  { nom: "Berdentz Sajous",               role: "Directeur Marketing",           photo: "" }
+]
 };

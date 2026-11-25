@@ -92,7 +92,25 @@ if (morceaux.length > 1) {
     div.innerHTML = `${photo}<h3>${echapper(m.nom)}</h3><p class="role">${echapper(m.role)}</p>${attente}${bio}`;
     grid.appendChild(div);
   });
- 
+ // Associés fondateurs (contenu fixe : data.js)
+const gridA = document.getElementById("associes-grid");
+if (gridA) {
+  gridA.innerHTML = "";
+  (ARAFIN_DATA.associes || []).forEach((m, i) => {
+    const div = document.createElement("div");
+    div.className = "membre membre-associe reveal";
+    div.style.transitionDelay = (i * 90) + "ms";
+    const aPhoto = m.photo && m.photo.trim() !== "";
+    const photo = aPhoto
+      ? `<img src="${echapper(m.photo)}" alt="Photo de ${echapper(m.nom)}">`
+      : `<div class="initiales">${echapper(initiales(m.nom))}</div>`;
+    const attente = aPhoto ? "" : `<span class="attente">Photo à venir</span>`;
+    div.innerHTML = `${photo}<h3>${echapper(m.nom)}</h3><p class="role">${echapper(m.role)}</p>${attente}`;
+    gridA.appendChild(div);
+  });
+}
+
+
   // Contact
   const contactEl = document.getElementById("contact-infos");
   let contactHTML = "";

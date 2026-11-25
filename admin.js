@@ -14,7 +14,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
   getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc,
-  query, orderBy
+  addDoc, deleteDoc, query, orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 import { firebaseConfig } from "./firebase-config.js";
 
@@ -141,6 +141,7 @@ onAuthStateChanged(auth, async user => {
   $("mon-email").textContent = user.email;
   await chargerMembres();
   trouverMaFiche();
+  chargerGalerieAdmin();
   if (estAdmin()) {
     $("admin-zone").hidden = false;
     await chargerSite();
@@ -446,5 +447,96 @@ $("btn-seed").addEventListener("click", async () => {
     msg.textContent = "✅ Base initialisée depuis data.js, avec les emails des 5 membres déjà remplis. Vérifie la liste ci-dessus.";
   } catch (e) {
     msg.textContent = erreurFR(e);
+  }
+});
+// ---------- Galerie du site (tous les membres du conseil) ----------
+// Chaque membre peut publier des photos sur la page publique « Galerie ».
+// La photo passe par la MÊME vérification automatique que les photos de
+// profil (analyserImage) : un contenu sensible est refusé et déclenche
+// l'alerte aux autres membres. Un membre ne peut supprimer que SES
+// photos ; les administrateurs peuvent tout supprimer.
+function echapperGal(txt) {
+  return String(txt ?? "").replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
+let galeriePhotos = [];
+
+async function chargerGalerieAdmin() {
+  try {
+    const snap = await getDocs(query(collection(db, "galerie"), orderBy("date", "desc")));
+    galeriePhotos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch (e) {
+    galeriePhotos = [];
+  }
+  afficherGalerieAdmin();
+}
+
+function afficherGalerieAdmin() {
+  const zone = $("gal-liste");
+  if (!zone) return;
+  zone.innerHTML = "";
+  let affichees = 0;
+  galeriePhotos.forEach(p => {
+    const mien = utilisateur && p.auteur === utilisateur.email;
+    if (!mien && !estAdmin()) return; // un membre ne gère que ses photos
+    affichees++;
+    const ligne = document.createElement("div");
+    ligne.className = "gal-admin-ligne";
+    const date = p.date ? new Date(p.date).toLocaleDateString("fr-FR") : "";
+    ligne.innerHTML =
+      `<img src="${echapperGal(p.photo)}" alt="">` +
+      `<div><strong>${echapperGal(p.legende || "Sans légende")}</strong><br>` +
+      `<small>${echapperGal(p.auteurNom || p.auteur)} — ${date}</small></div>`;
+    const btn = document.createElement("button");
+    btn.className = "btn btn-outline";
+    btn.style.cssText = "color:var(--vert)!important;padding:8px 14px;font-size:.88rem";
+    btn.textContent = "Supprimer";
+    btn.addEventListener("click", async () => {
+      if (!confirm("Supprimer cette photo de la galerie ?")) return;
+      try {
+        await deleteDoc(doc(db, "galerie", p.id));
+        chargerGalerieAdmin();
+      } catch (e) {
+        $("gal-msg").textContent = "Suppression impossible (" + erreurFR(e) + ").";
+      }
+    });
+    ligne.appendChild(btn);
+    zone.appendChild(ligne);
+  });
+  if (!affichees) {
+    zone.innerHTML = "<p style='color:#777;margin:10px 0 0'>Aucune photo à gérer pour le moment — les tiennes apparaîtront ici.</p>";
+  }
+}
+
+$("btn-gal-publier").addEventListener("click", async () => {
+  const fichier = $("gal-photo").files[0];
+  const msg = $("gal-msg");
+  if (!fichier) { msg.textContent = "Choisis d'abord une photo."; return; }
+  msg.textContent = "Analyse de sécurité de l'image en cours…";
+  try {
+    const acceptable = await analyserImage(fichier);
+    if (!acceptable) {
+      $("gal-photo").value = "";
+      msg.textContent = "❌ Image refusée : un contenu sensible (pornographie ou image inappropriée) a été détecté. La galerie ARAFIN ne publie pas ce type d'image.";
+      alerterConseilImageRefusee();
+      return;
+    }
+    msg.textContent = "Publication en cours…";
+    const dataUrl = await reduireImage(fichier);
+    await addDoc(collection(db, "galerie"), {
+      photo: dataUrl,
+      legende: $("gal-legende").value.trim().slice(0, 200),
+      auteur: utilisateur.email,
+      auteurNom: (maFiche && maFiche.nom) || utilisateur.email,
+      date: Date.now()
+    });
+    $("gal-photo").value = "";
+    $("gal-legende").value = "";
+    msg.textContent = "✅ Photo publiée dans la galerie du site.";
+    chargerGalerieAdmin();
+  } catch (e) {
+    msg.textContent = "La publication n'a pas pu se faire (" + erreurFR(e) + "). Réessaie dans un instant.";
   }
 });

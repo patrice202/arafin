@@ -54,7 +54,24 @@
       Ton compte n'est associé à aucune fiche du conseil pour le moment.
       Demande à l'administrateur du site d'ajouter ton adresse email à ta fiche.
     </div>
- 
+ <!-- Galerie (tous les membres du conseil) -->
+<div id="galerie-box">
+  <h2>📷 Galerie du site</h2>
+  <div class="membre-edit">
+    <p style="margin:0">Publie une photo sur la page <strong>Galerie</strong> du site — elle sera visible par tout le monde.
+    Chaque photo est <strong>vérifiée automatiquement</strong> avant publication : aucun contenu sensible ne peut passer.</p>
+    <label for="gal-photo">Photo à publier (elle sera réduite automatiquement)</label>
+    <input type="file" id="gal-photo" accept="image/*">
+    <label for="gal-legende">Légende (optionnel)</label>
+    <input type="text" id="gal-legende" maxlength="200" placeholder="Ex : Visite d'une parcelle à Bas-Boën">
+    <div class="admin-row">
+      <button class="btn btn-green" id="btn-gal-publier">Publier dans la galerie</button>
+    </div>
+    <p id="gal-msg" class="msg"></p>
+    <div id="gal-liste"></div>
+  </div>
+</div>
+
     <!-- Mon compte -->
     <h2>Mon compte</h2>
     <div class="membre-edit">
@@ -110,6 +127,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/nsfwjs@4.2.1/dist/browser/nsfwjs.min.js"></script>
-<script type="module" src="admin.js?v=4"></script>
+<script type="module" src="admin.js?v=5"></script>
 </body>
 </html>
