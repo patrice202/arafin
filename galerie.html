@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galerie — ARAFIN | ARTI Agro Finance en images</title>
+  <meta name="description" content="La galerie d'ARAFIN (ARTI Agro Finance) : les terres, les producteurs et les projets agricoles haïtiens en images, publiés par les membres du conseil.">
+  <meta name="theme-color" content="#0a3524">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=10">
+</head>
+<body>
+
+<header class="header">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html#accueil">
+        <span class="brand-mark">A</span>
+        <span class="brand-name">ARAFIN<small>ARTI AGRO FINANCE</small></span>
+      </a>
+      <button class="nav-burger" id="nav-burger" aria-label="Ouvrir le menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="nav">
+        <a href="index.html#apropos">À propos</a>
+        <a href="index.html#approche">Approche</a>
+        <a href="index.html#services">Services</a>
+        <a href="index.html#conseil">Conseil</a>
+        <a href="index.html#associes">Associés</a>
+        <a href="galerie.html" class="active">Galerie</a>
+        <a href="index.html#contact">Contact</a>
+        <a class="nav-cta" href="admin.html" title="Espace Conseil" aria-label="Espace Conseil"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg></a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============ GALERIE ============ -->
+  <section class="section" style="padding-top:130px">
+    <div class="wrap">
+      <p class="kicker kicker-dark center reveal">Galerie</p>
+      <h2 class="center reveal">ARAFIN en images</h2>
+      <p class="section-sub reveal">Les terres, les producteurs et les projets qu'ARAFIN accompagne —
+      des photos publiées par les membres du conseil d'administration. Cliquez sur une photo pour l'agrandir.</p>
+      <p id="galerie-vide" class="galerie-vide" hidden>Les premières photos arrivent très bientôt.</p>
+      <div id="galerie-grid" class="galerie-grid"></div>
+    </div>
+  </section>
+
+<footer class="footer">
+    <div class="wrap footer-grid">
+      <div>
+        <a class="brand brand-light" href="index.html#accueil">
+          <span class="brand-mark">A</span>
+          <span class="brand-name">ARAFIN<small>ARTI AGRO FINANCE</small></span>
+        </a>
+        <p class="footer-text">Société en Commandite Simple fondée le 19 octobre 2026.
+        Agro-finance, incubation et commercialisation au service des producteurs haïtiens.</p>
+      </div>
+      <div>
+        <h4>Navigation</h4>
+        <a href="index.html#apropos">À propos</a>
+        <a href="index.html#approche">Approche</a>
+        <a href="index.html#services">Services</a>
+        <a href="index.html#conseil">Conseil</a>
+        <a href="index.html#associes">Associés</a>
+        <a href="galerie.html">Galerie</a>
+      </div>
+      <div>
+        <h4>Société</h4>
+        <a href="index.html#contact">Contact</a>
+        <a href="admin.html">Espace Conseil</a>
+        <p class="footer-text">Port-au-Prince, Haïti</p>
+      </div>
+    </div>
+    <div class="wrap footer-legal">
+      <h4>Mentions légales</h4>
+      <p><strong>ARAFIN — ARTI Agro Finance.</strong> Forme juridique : société en commandite
+      simple (SCS), constituée le 19 octobre 2026. Siège : Port-au-Prince, Haïti.
+      Objet : intermédiation financière entre investisseurs, institutions financières et
+      producteurs agricoles haïtiens ; incubation et financement de projets agricoles et
+      agroalimentaires ; production, transformation et commercialisation de produits
+      agricoles, sur le marché local et à l'exportation.</p>
+      <p>Photographies d'illustration : Kendra Helmer / USAID et Ben Edwards / USAID
+      (domaine public) ; Vic Hinterlang / SOIL, Haïti (licence CC BY 2.0) — via Wikimedia
+      Commons. Elles illustrent l'agriculture haïtienne et ne représentent pas les activités
+      d'ARAFIN.</p>
+      <p>Photographies des équipements (motoculteurs et tricycles cargo) : images de
+      fournisseurs, présentées à titre d'illustration des matériels concernés par les
+      projets accompagnés par ARAFIN.</p>
+    </div>
+    <div class="wrap footer-bottom">
+      <p>ARAFIN — ARTI Agro Finance · Société en Commandite Simple · Port-au-Prince, Haïti · © 2026</p>
+    </div>
+  </footer>
+
+  <!-- Visionneuse plein écran -->
+  <div id="lightbox" class="lightbox" hidden>
+    <button class="lb-close" id="lb-close" aria-label="Fermer">✕</button>
+    <img id="lb-img" alt="">
+    <p><span id="lb-legende"></span><small id="lb-meta"></small></p>
+  </div>
+
+  <script>
+    // Menu mobile + ombre de l'en-tête (même comportement que la page d'accueil)
+    (function () {
+      var burger = document.getElementById("nav-burger");
+      var nav = document.querySelector(".nav");
+      if (burger && nav) {
+        burger.addEventListener("click", function () {
+          var ouvert = nav.classList.toggle("open");
+          burger.setAttribute("aria-expanded", ouvert ? "true" : "false");
+        });
+        nav.querySelectorAll("a").forEach(function (a) {
+          a.addEventListener("click", function () { nav.classList.remove("open"); });
+        });
+      }
+      var header = document.querySelector(".header");
+      window.addEventListener("scroll", function () {
+        if (header) header.classList.toggle("scrolled", window.scrollY > 10);
+      }, { passive: true });
+    })();
+  </script>
+  <script type="module" src="galerie.js?v=1"></script>
+</body>
+</html>
