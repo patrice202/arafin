@@ -110,7 +110,7 @@ if (data.contact.email) {
       : `<p>📞 <strong>${echapper(data.contact.whatsapp)}</strong></p>`;
   }
   if (!data.contact.email && !data.contact.whatsapp) {
-    contactHTML += `<p>Les coordonnées directes seront publiées très bientôt — en attendant, contactez un membre du conseil d'administration.</p>`;
+    contactHTML += `<p>Les coordonnées directes seront publiées très bientôt — en attendant, contactez un membre du conseil d'administration: administration@arafin.com</p>`;
   }
   contactEl.innerHTML = contactHTML;
  
