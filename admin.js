@@ -216,15 +216,19 @@ $("btn-change-mdp").addEventListener("click", async () => {
     $("mdp-actuel").value = $("mdp-nouveau").value = $("mdp-confirme").value = "";
     msg.style.color = "var(--green-800)";
     msg.textContent = "✅ Mot de passe changé. Utilise le nouveau à ta prochaine connexion.";
-    // Alerte email au membre (EmailJS) — un échec d'envoi n'annule jamais le changement
-try {
-  if (typeof emailjs !== "undefined") {
-    await emailjs.send("service_ftp46v9", "template_humfg23", {
-      to_email: utilisateur.email,
-      date_heure: new Date().toLocaleString("fr-FR")
-    }, { publicKey: "DQg0_UyzcRt_8VzNx" });
-  }
-} catch (e) { /* alerte bonus : on ignore l'échec */ }
+    // Alerte email au membre (EmailJS, même méthode que le formulaire de contact)
+    try {
+      if (typeof emailjs !== "undefined") {
+        emailjs.init({ publicKey: "DQg0_UyzcRt_8VzNx" });
+        await emailjs.send("service_ftp46v9", "template_humfg23", {
+          to_email: utilisateur.email,
+          date_heure: new Date().toLocaleString("fr-FR")
+        });
+        msg.textContent += " Alerte email envoyée.";
+      }
+    } catch (e) {
+      msg.textContent += " (Alerte email non envoyée : " + (e && e.text ? e.text : e) + ")";
+    }
   } catch (e) {
     msg.textContent = erreurFR(e);
   }
