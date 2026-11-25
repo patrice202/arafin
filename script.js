@@ -66,7 +66,7 @@ function afficher(data) {
   // Bandeau d'annonce
   const annonceEl = document.getElementById("annonce");
   if (data.annonce && data.annonce.trim() !== "") {
-    annonceEl.textContent = data.annonce;
+    annonceEl.innerHTML = data.annonce;
     annonceEl.hidden = false;
   }
  
