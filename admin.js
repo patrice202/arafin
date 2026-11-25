@@ -477,36 +477,89 @@ function afficherGalerieAdmin() {
   const zone = $("gal-liste");
   if (!zone) return;
   zone.innerHTML = "";
+  const TRENTE_JOURS = 30 * 24 * 3600 * 1000;
   let affichees = 0;
   galeriePhotos.forEach(p => {
     const mien = utilisateur && p.auteur === utilisateur.email;
-    if (!mien && !estAdmin()) return; // un membre ne gère que ses photos
+    if (!mien && !estAdmin()) return; // un membre ne gère que ses photos (les admins voient tout)
     affichees++;
     const ligne = document.createElement("div");
     ligne.className = "gal-admin-ligne";
     const date = p.date ? new Date(p.date).toLocaleDateString("fr-FR") : "";
+    // Photo du membre, vieille de plus d'1 mois : suppression directe
+    // impossible — il faut l'approbation du Président ou du Vice-Président.
+    const tropVieille = mien && !estAdmin() && p.date
+      && (Date.now() - p.date > TRENTE_JOURS);
     ligne.innerHTML =
       `<img src="${echapperGal(p.photo)}" alt="">` +
       `<div><strong>${echapperGal(p.legende || "Sans légende")}</strong><br>` +
-      `<small>${echapperGal(p.auteurNom || p.auteur)} — ${date}</small></div>`;
+      `<small>${echapperGal(p.auteurNom || p.auteur)} — ${date}</small>` +
+      (tropVieille
+        ? `<br><small style="color:#a33">Photo de plus d'1 mois : la suppression demande l'accord du Président ou du Vice-Président.</small>`
+        : ``) +
+      `</div>`;
     const btn = document.createElement("button");
     btn.className = "btn btn-outline";
     btn.style.cssText = "color:var(--vert)!important;padding:8px 14px;font-size:.88rem";
-    btn.textContent = "Supprimer";
-    btn.addEventListener("click", async () => {
-      if (!confirm("Supprimer cette photo de la galerie ?")) return;
-      try {
-        await deleteDoc(doc(db, "galerie", p.id));
-        chargerGalerieAdmin();
-      } catch (e) {
-        $("gal-msg").textContent = "Suppression impossible (" + erreurFR(e) + ").";
-      }
-    });
+    if (tropVieille) {
+      btn.textContent = "Demander la suppression";
+      btn.addEventListener("click", () => demanderSuppressionGalerie(p));
+    } else {
+      btn.textContent = "Supprimer";
+      btn.addEventListener("click", async () => {
+        if (!confirm("Supprimer cette photo de la galerie ?")) return;
+        try {
+          await deleteDoc(doc(db, "galerie", p.id));
+          chargerGalerieAdmin();
+        } catch (e) {
+          $("gal-msg").textContent = "Suppression impossible (" + erreurFR(e) + ").";
+        }
+      });
+    }
     ligne.appendChild(btn);
     zone.appendChild(ligne);
   });
   if (!affichees) {
     zone.innerHTML = "<p style='color:#777;margin:10px 0 0'>Aucune photo à gérer pour le moment — les tiennes apparaîtront ici.</p>";
+  }
+}
+
+// ---------- Galerie : demande de suppression (> 1 mois) ----------
+// Le membre ne peut plus supprimer directement une photo de plus
+// d'1 mois : sa demande part par email au Président et au
+// Vice-Président, qui approuvent en supprimant eux-mêmes la photo
+// depuis leur propre liste (ils voient toutes les photos).
+async function demanderSuppressionGalerie(p) {
+  const msg = $("gal-msg");
+  const nomMembre = (maFiche && maFiche.nom) || utilisateur.email;
+  const datePub = p.date ? new Date(p.date).toLocaleDateString("fr-FR") : "";
+  const texte =
+    "Bonjour,\n\n" +
+    nomMembre + " (" + utilisateur.email + ") demande la suppression d'une de ses photos " +
+    "dans la galerie du site ARAFIN.\n\n" +
+    "Photo : « " + (p.legende || "Sans légende") + " » — publiée le " + datePub + ".\n\n" +
+    "Cette photo a plus d'1 mois : selon les règles de la galerie, sa suppression " +
+    "nécessite l'approbation du Président ou du Vice-Président.\n\n" +
+    "POUR APPROUVER : connectez-vous à l'Espace Conseil (https://arafinhaiti.com/admin.html), " +
+    "zone « Galerie du site », et supprimez cette photo depuis votre liste.\n" +
+    "Si vous refusez, prévenez simplement le membre.\n\n" +
+    "— Espace Conseil ARAFIN";
+  msg.textContent = "Envoi de la demande…";
+  try {
+    emailjs.init({ publicKey: "DQg0_UyzcRt_8VzNx" });
+    for (const admin of ADMIN_EMAILS) {
+      await emailjs.send("service_ftp46v9", "template_yppb0ss", {
+        to_email: admin,
+        name: "DEMANDE DE SUPPRESSION — photo de la galerie",
+        email: utilisateur.email,
+        title: "Galerie ARAFIN — approbation de suppression demandée",
+        message: texte,
+        time: new Date().toLocaleString("fr-FR")
+      });
+    }
+    msg.textContent = "✅ Demande envoyée au Président et au Vice-Président. L'un d'eux supprimera la photo s'il approuve.";
+  } catch (e) {
+    msg.textContent = "La demande n'a pas pu être envoyée. Réessaie dans un instant.";
   }
 }
 
