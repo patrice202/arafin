@@ -637,8 +637,7 @@ h2 { font-size: clamp(1.55rem, 2.8vw, 2.05rem); }
    en bande nette avec filet doré, tuiles aux coins légers.
    ========================================================== */
 .hero { background: var(--cream); color: var(--ink); }
-.hero .wrap { display: flex; flex-direction: column; }
-.hero-content { order: -1; padding: 54px 24px 0; }
+.hero > .wrap { display: flex; flex-direction: column; }.hero-content { order: -1; padding: 54px 24px 0; }
 .hero h1 { color: var(--green-950); }
 .hero .kicker { color: var(--gold-dark); }
 .hero-sub { color: var(--muted); }
