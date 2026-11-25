@@ -198,6 +198,7 @@ function activerAnimations() {
     msg.textContent = "Envoi en cours…";
     try {
       await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+        to_email: "arafinhaiti@gmail.com",
         name: nom,
         email: email,
         message: message,

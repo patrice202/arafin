@@ -20,7 +20,14 @@ import { firebaseConfig } from "./firebase-config.js";
 
 // Comptes administrateurs (peuvent tout modifier : annonce, contacts, fiches des membres)
 const ADMIN_EMAILS = ["antoniosaintilmond1@gmail.com", "daniellegros02@gmail.com"];
-
+// Emails des 5 membres du Conseil (seuls comptes autorisés dans l'Espace Conseil)
+const EMAILS_AUTORISES = [
+  "antoniosaintilmond1@gmail.com",
+  "daniellegros02@gmail.com",
+  "oliviersoifaite07@gmail.com",
+  "handydolphe7@gmail.com",
+  "alcidekenny009@gmail.com"
+];
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -73,18 +80,48 @@ $("login-mdp").addEventListener("keydown", e => {
 
 $("lien-oublie").addEventListener("click", async e => {
   e.preventDefault();
-  const email = $("login-email").value.trim();
+  const email = $("login-email").value.trim().toLowerCase();
+  const msg = $("login-msg");
   if (!email) {
-    $("login-msg").textContent = "Entre ton adresse email ci-dessus, puis clique à nouveau sur « Mot de passe oublié ».";
+    msg.style.color = "#b91c1c";
+    msg.textContent = "Entre ton adresse email ci-dessus, puis clique à nouveau sur « Mot de passe oublié ».";
+    return;
+  }
+  // GARDE D'ACCÈS : seuls les emails des membres du Conseil peuvent recevoir un lien
+  if (!EMAILS_AUTORISES.includes(email)) {
+    const cle = "arafin_tentatives_" + email;
+    const n = (parseInt(localStorage.getItem(cle) || "0", 10) || 0) + 1;
+    try { localStorage.setItem(cle, String(n)); } catch (err) {}
+    msg.style.color = "#b91c1c";
+    msg.textContent = "❌ Adresse non reconnue : cet email ne fait pas partie des membres du Conseil d'Administration. Accès refusé." + (n > 2 ? " Le Conseil d'Administration a été alerté." : "");
+    // ALERTE SÉCURITÉ : à la 3e tentative, un email part à TOUS les membres du Conseil
+    if (n === 3) {
+      try {
+        if (typeof emailjs !== "undefined") {
+          emailjs.init({ publicKey: "DQg0_UyzcRt_8VzNx" });
+          const maintenant = new Date().toLocaleString("fr-FR");
+          for (const membre of EMAILS_AUTORISES) {
+            await emailjs.send("service_ftp46v9", "template_yppb0ss", {
+              to_email: membre,
+              name: "ALERTE SÉCURITÉ — tentative d'accès non autorisé",
+              email: email,
+              title: "Alerte sécurité Espace Conseil",
+              message: "Une adresse email qui ne fait pas partie des membres du Conseil d'Administration essaie d'entrer dans l'Espace Conseil ARAFIN.\n\nAdresse suspecte : " + email + "\nTentatives : " + n + "\nDate et heure : " + maintenant + "\n\nNous avons besoin d'une aide immédiate. Si ce n'est aucun d'entre vous, prévenez le président, le vice-président ou le responsable informatique.",
+              time: maintenant
+            });
+          }
+        }
+      } catch (err) { /* l'alerte ne doit jamais bloquer le refus d'accès */ }
+    }
     return;
   }
   try {
     await sendPasswordResetEmail(auth, email);
-    $("login-msg").style.color = "var(--green-800)";
-    $("login-msg").textContent = "✅ Email envoyé à " + email + " — clique le lien reçu pour choisir un nouveau mot de passe.";
+    msg.style.color = "var(--green-800)";
+    msg.textContent = "✅ Email envoyé à " + email + " — clique le lien reçu pour choisir un nouveau mot de passe.";
   } catch (err) {
-    $("login-msg").style.color = "#b91c1c";
-    $("login-msg").textContent = erreurFR(err);
+    msg.style.color = "#b91c1c";
+    msg.textContent = erreurFR(err);
   }
 });
 
