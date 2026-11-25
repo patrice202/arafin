@@ -177,6 +177,8 @@ function activerAnimations() {
 })();
 // ---------- Formulaire de contact (EmailJS) ----------
 (function () {
+  if (window.__arafinFormeLie) return;
+  window.__arafinFormeLie = true;
   const form = document.getElementById("contact-form");
   if (!form || typeof emailjs === "undefined") return;
   const CLE_PUBLIQUE = "DQg0_UyzcRt_8VzNx";
