@@ -631,3 +631,24 @@ h2 { font-size: clamp(1.55rem, 2.8vw, 2.05rem); }
 .btn:hover::after, .mz-arrow:hover::after { left: 140%; }
 .btn-gold { box-shadow: 0 10px 24px rgba(198,161,91,.35), inset 0 1px 0 rgba(255,255,255,.55); }
 .btn-gold:hover { box-shadow: 0 14px 30px rgba(198,161,91,.5), inset 0 1px 0 rgba(255,255,255,.55); }
+/* ==========================================================
+   BANDE PHOTOS — style de la capture v6 (demande d'Antonio,
+   25 nov. 2026) : hero crème, titre d'abord, puis la mosaïque
+   en bande nette avec filet doré, tuiles aux coins légers.
+   ========================================================== */
+.hero { background: var(--cream); color: var(--ink); }
+.hero .wrap { display: flex; flex-direction: column; }
+.hero-content { order: -1; padding: 54px 24px 0; }
+.hero h1 { color: var(--green-950); }
+.hero .kicker { color: var(--gold-dark); }
+.hero-sub { color: var(--muted); }
+.btn-ghost { color: var(--green-900); border-color: var(--green-900); }
+.btn-ghost:hover { background: var(--sage); }
+.mz { order: 1; margin-top: 42px; padding-top: 30px; border-top: 2px solid var(--gold); }
+.mz-tile { border-radius: 12px; }
+.hero-facts { background: var(--green-950); margin-top: 54px; }
+@media (max-width: 760px) {
+  .hero-content { padding-top: 36px; }
+  .mz { margin-top: 30px; padding-top: 22px; }
+  .hero-facts { margin-top: 36px; }
+}
