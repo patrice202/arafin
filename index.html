@@ -16,6 +16,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=7">
+  <script type="module" src="script.js?v=7"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
  
@@ -211,7 +213,25 @@
         nous répondons à chaque demande sérieuse.</p>
       </div>
       <div id="contact-infos" class="contact-infos reveal"></div>
-    </div>
+      <div class="contact-form-wrap reveal">
+  <h3 class="form-title">Écrivez-nous directement</h3>
+  <form id="contact-form" class="contact-form">
+    <label>Votre nom *
+      <input type="text" name="nom" required autocomplete="name">
+    </label>
+    <label>Votre adresse email *
+      <input type="email" name="email" required autocomplete="email">
+    </label>
+    <label>Votre téléphone (facultatif)
+      <input type="tel" name="telephone" autocomplete="tel">
+    </label>
+    <label>Votre message *
+      <textarea name="message" rows="5" required></textarea>
+    </label>
+    <button type="submit" class="btn btn-gold">Envoyer</button>
+    <p id="form-msg" class="form-msg" role="status"></p>
+  </form>
+</div>
   </section>
  
   <!-- ============ PIED DE PAGE ============ -->

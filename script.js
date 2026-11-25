@@ -97,7 +97,12 @@ if (morceaux.length > 1) {
   const contactEl = document.getElementById("contact-infos");
   let contactHTML = "";
   if (data.contact.adresse) contactHTML += `<p>📍 <strong>${echapper(data.contact.adresse)}</strong></p>`;
-  if (data.contact.email) contactHTML += `<p>✉️ <a href="mailto:${echapper(data.contact.email)}">${echapper(data.contact.email)}</a></p>`;
+if (data.contact.email) {
+  data.contact.email.split(",").forEach(partie => {
+    const e = partie.trim();
+    if (e) contactHTML += `<p>✉️ <a href="mailto:${echapper(e)}">${echapper(e)}</a></p>`;
+  });
+}
   if (data.contact.whatsapp) {
     const chiffres = data.contact.whatsapp.replace(/\D/g, "");
     contactHTML += chiffres
@@ -169,4 +174,38 @@ function activerAnimations() {
     x0 = null;
   }, { passive: true });
   relancer();
+})();
+// ---------- Formulaire de contact (EmailJS) ----------
+(function () {
+  const form = document.getElementById("contact-form");
+  if (!form || typeof emailjs === "undefined") return;
+  const CLE_PUBLIQUE = "DQg0_UyzcRt_8VzNx";
+  const SERVICE_ID = "service_ftp46v9";
+  const TEMPLATE_ID = "template_yppb0ss";
+  emailjs.init({ publicKey: CLE_PUBLIQUE });
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const msg = document.getElementById("form-msg");
+    const bouton = form.querySelector("button[type=submit]");
+    const nom = form.elements["nom"].value.trim();
+    const email = form.elements["email"].value.trim();
+    const tel = form.elements["telephone"].value.trim();
+    let message = form.elements["message"].value.trim();
+    if (tel) message += "\n\nTéléphone : " + tel;
+    bouton.disabled = true;
+    msg.textContent = "Envoi en cours…";
+    try {
+      await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+        name: nom,
+        email: email,
+        message: message,
+        time: new Date().toLocaleString("fr-FR")
+      });
+      msg.textContent = "✅ Merci ! Votre message a bien été envoyé — nous vous répondrons bientôt.";
+      form.reset();
+    } catch (err) {
+      msg.textContent = "❌ L'envoi a échoué. Réessayez, ou écrivez-nous directement à info@arafinhaiti.com.";
+    }
+    bouton.disabled = false;
+  });
 })();

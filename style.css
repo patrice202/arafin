@@ -534,3 +534,16 @@ h2.center, .center { text-align: center; }
 @media (max-width: 760px) {
   .annonce img { height: 96px; }
 }
+/* ---------- Formulaire de contact ---------- */
+.contact-form-wrap { grid-column: 1 / -1; margin-top: 8px; }
+.form-title { font-family: "Fraunces", serif; font-size: 1.35rem; margin-bottom: 14px; color: var(--green-900, #0a3524); }
+.contact-form { display: grid; gap: 12px; max-width: 640px; }
+.contact-form label { display: grid; gap: 6px; font-weight: 600; font-size: .95rem; }
+.contact-form input, .contact-form textarea {
+  font: inherit; font-weight: 400; padding: 11px 13px;
+  border: 1px solid #d9c9a8; border-radius: 10px; background: #fffdf7; color: #1c2a22;
+}
+.contact-form input:focus, .contact-form textarea:focus { outline: 2px solid var(--gold, #c9a45c); border-color: transparent; }
+.contact-form button { justify-self: start; }
+.contact-form button:disabled { opacity: .6; }
+.form-msg { font-size: .95rem; min-height: 1.2em; }
