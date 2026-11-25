@@ -110,7 +110,7 @@ if (data.contact.email) {
       : `<p>📞 <strong>${echapper(data.contact.whatsapp)}</strong></p>`;
   }
   if (!data.contact.email && !data.contact.whatsapp) {
-    contactHTML += `<p>Les coordonnées directes seront publiées très bientôt — en attendant, contactez un membre du conseil d'administration: administration@arafin.com</p>`;
+    contactHTML += `<p>Les coordonnées directes seront publiées très bientôt — en attendant, contactez un membre du conseil d'administration: administration@arafinhaiti.com</p>`;
   }
   contactEl.innerHTML = contactHTML;
  
@@ -175,7 +175,9 @@ function activerAnimations() {
   }, { passive: true });
   relancer();
 })();
-// ---------- Formulaire de contact (EmailJS) ----------
+// ---------- Formulaire de contact (EmailJS) — vérification de l'email de l'expéditeur ----------
+// Le message n'arrive à l'équipe QUE si l'expéditeur prouve qu'il possède
+// l'adresse email saisie, en entrant le code reçu à cette adresse.
 (function () {
   if (window.__arafinFormeLie) return;
   window.__arafinFormeLie = true;
@@ -185,31 +187,101 @@ function activerAnimations() {
   const SERVICE_ID = "service_ftp46v9";
   const TEMPLATE_ID = "template_yppb0ss";
   emailjs.init({ publicKey: CLE_PUBLIQUE });
+  const msg = document.getElementById("form-msg");
+  const zone = document.getElementById("verif-zone");
+  const champCode = document.getElementById("verif-code");
+  const btnVerifier = document.getElementById("btn-verifier");
+  const btnRenvoyer = document.getElementById("btn-renvoyer");
+  let enAttente = null; // { nom, email, message, code, expiration, essais }
+
+  function nouveauCode() { return String(Math.floor(100000 + Math.random() * 900000)); }
+
+  async function envoyerCode() {
+    enAttente.code = nouveauCode();
+    enAttente.expiration = Date.now() + 10 * 60 * 1000; // valable 10 minutes
+    enAttente.essais = 0;
+    await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+      to_email: enAttente.email,
+      name: "ARAFIN — Vérification de votre adresse email",
+      email: enAttente.email,
+      title: "Code de vérification ARAFIN",
+      message: "Bonjour " + enAttente.nom + ",\n\nVous avez demandé à envoyer un message à l'équipe ARAFIN via le site arafinhaiti.com. Pour prouver que cette adresse email est bien la vôtre, voici votre code de vérification :\n\nCODE : " + enAttente.code + "\n\nRetournez sur le site et entrez ce code pour transmettre votre message. Le code est valable 10 minutes.\n\nSi vous n'êtes pas à l'origine de cette demande, ignorez cet email : sans le code, aucun message ne sera transmis à l'équipe.\n\n— ARAFIN · ARTI Agro Finance",
+      time: new Date().toLocaleString("fr-FR")
+    });
+  }
+
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
-    const msg = document.getElementById("form-msg");
     const bouton = form.querySelector("button[type=submit]");
     const nom = form.elements["nom"].value.trim();
-    const email = form.elements["email"].value.trim();
+    const email = form.elements["email"].value.trim().toLowerCase();
     const tel = form.elements["telephone"].value.trim();
     let message = form.elements["message"].value.trim();
     if (tel) message += "\n\nTéléphone : " + tel;
     bouton.disabled = true;
-    msg.textContent = "Envoi en cours…";
+    msg.textContent = "Envoi du code de vérification…";
+    try {
+      enAttente = { nom: nom, email: email, message: message };
+      await envoyerCode();
+      if (zone) zone.hidden = false;
+      msg.textContent = "📧 Un code de vérification vient d'être envoyé à " + email + ". Entrez-le ci-dessous pour transmettre votre message à notre équipe. (Vérifiez aussi vos spams.)";
+      if (champCode) champCode.focus();
+    } catch (err) {
+      msg.textContent = "❌ L'envoi du code a échoué. Vérifiez votre adresse email, ou écrivez-nous directement à info@arafinhaiti.com.";
+      enAttente = null;
+    }
+    bouton.disabled = false;
+  });
+
+  if (btnVerifier) btnVerifier.addEventListener("click", async function () {
+    if (!enAttente) return;
+    const saisi = champCode.value.trim();
+    if (Date.now() > enAttente.expiration) {
+      msg.textContent = "⏰ Ce code a expiré (10 minutes). Cliquez sur « Renvoyer le code » pour en recevoir un nouveau.";
+      return;
+    }
+    if (saisi !== enAttente.code) {
+      enAttente.essais++;
+      if (enAttente.essais >= 3) {
+        enAttente = null;
+        if (zone) zone.hidden = true;
+        msg.textContent = "❌ Trop de codes incorrects. Pour votre sécurité, recommencez le formulaire.";
+      } else {
+        msg.textContent = "❌ Code incorrect (essai " + enAttente.essais + "/3). Vérifiez l'email reçu et réessayez.";
+      }
+      return;
+    }
+    btnVerifier.disabled = true;
+    msg.textContent = "Code correct — transmission de votre message…";
     try {
       await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
         to_email: "arafinhaiti@gmail.com",
-        name: nom,
-        email: email,
-        message: message,
+        name: enAttente.nom,
+        email: enAttente.email,
+        message: enAttente.message,
         time: new Date().toLocaleString("fr-FR")
       });
-      msg.textContent = "✅ Merci ! Votre message a bien été envoyé — nous vous répondrons bientôt.";
+      msg.textContent = "✅ Merci ! Votre adresse est vérifiée et votre message a bien été transmis à notre équipe — nous vous répondrons bientôt.";
       form.reset();
+      if (zone) zone.hidden = true;
+      champCode.value = "";
+      enAttente = null;
     } catch (err) {
-      msg.textContent = "❌ L'envoi a échoué. Réessayez, ou écrivez-nous directement à info@arafinhaiti.com.";
+      msg.textContent = "❌ La transmission a échoué. Réessayez, ou écrivez-nous directement à info@arafinhaiti.com.";
     }
-    bouton.disabled = false;
+    btnVerifier.disabled = false;
+  });
+
+  if (btnRenvoyer) btnRenvoyer.addEventListener("click", async function () {
+    if (!enAttente) return;
+    btnRenvoyer.disabled = true;
+    try {
+      await envoyerCode();
+      msg.textContent = "📧 Un nouveau code vient d'être envoyé à " + enAttente.email + ".";
+    } catch (err) {
+      msg.textContent = "❌ L'envoi du nouveau code a échoué. Réessayez dans un instant.";
+    }
+    btnRenvoyer.disabled = false;
   });
 })();
 // ===== v4 FLUIDITÉ : ombre du header, retour en haut, menu mobile, section active =====

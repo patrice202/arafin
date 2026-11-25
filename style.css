@@ -582,3 +582,6 @@ section[id] { scroll-margin-top: 92px; }
   .nav a::after { display: none; }
   .nav a.nav-cta { align-self: flex-start; margin: 4px 0 4px 10px; }
 }
+/* ===== Vérification email du formulaire ===== */
+#verif-zone { margin-top: 10px; display: grid; gap: 10px; }
+#verif-zone[hidden] { display: none; }
