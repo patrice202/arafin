@@ -220,10 +220,13 @@ $("btn-change-mdp").addEventListener("click", async () => {
     try {
       if (typeof emailjs !== "undefined") {
         emailjs.init({ publicKey: "DQg0_UyzcRt_8VzNx" });
-        await emailjs.send("service_ftp46v9", "template_humfg23", {
-          to_email: utilisateur.email,
-          date_heure: new Date().toLocaleString("fr-FR")
-        });
+const heureActuelle = new Date().getHours();
+const salutation = (heureActuelle >= 18 || heureActuelle < 5) ? "Bonsoir" : "Bonjour";
+await emailjs.send("service_ftp46v9", "template_humfg23", {
+  to_email: utilisateur.email,
+  date_heure: new Date().toLocaleString("fr-FR"),
+  salutation: salutation
+});
         msg.textContent += " Alerte email envoyée.";
       }
     } catch (e) {
