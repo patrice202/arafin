@@ -179,15 +179,71 @@ function majApercuPhoto(photo) {
 }
 
 // ---------- Ma fiche : photo + bio ----------
+// PROTECTION DU SITE : chaque photo est analysée par une IA locale (NSFWJS)
+// AVANT d'être acceptée. Une image pornographique ou sensible est refusée
+// et n'arrive jamais sur le site. Modèle hébergé à la racine du site (model.json).
+let modeleNSFW = null;
+async function analyserImage(fichier) {
+  // Renvoie true si l'image est acceptable, false si contenu sensible détecté.
+  if (typeof nsfwjs === "undefined") throw new Error("analyse indisponible");
+  if (!modeleNSFW) modeleNSFW = await nsfwjs.load("./");
+  const url = URL.createObjectURL(fichier);
+  try {
+    const img = new Image();
+    await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
+    const resultats = await modeleNSFW.classify(img);
+    const score = {};
+    resultats.forEach(r => { score[r.className] = r.probability; });
+    const risque = (score["Porn"] || 0) + (score["Hentai"] || 0);
+    const sexy = score["Sexy"] || 0;
+    return !(risque >= 0.60 || sexy >= 0.90);
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+// ALERTE : un membre a essayé de publier une image sensible — un email part
+// automatiquement aux AUTRES membres du Conseil (modèle Contact Us, comme
+// l'alerte des mots de passe). L'alerte ne bloque jamais le refus.
+async function alerterConseilImageRefusee() {
+  try {
+    emailjs.init({ publicKey: "DQg0_UyzcRt_8VzNx" });
+    const qui = (maFiche && maFiche.nom ? maFiche.nom : "Un membre") +
+      " (" + (utilisateur ? utilisateur.email : "email inconnu") + ")";
+    const dateHeure = new Date().toLocaleString("fr-FR");
+    const texte = "ALERTE SÉCURITÉ — ARAFIN\n\n" + qui + " a essayé de publier une image détectée comme pornographique ou sensible dans l'Espace Conseil du site ARAFIN.\n\nL'image a été REFUSÉE automatiquement par le système de protection : elle n'a pas été enregistrée et n'apparaît pas sur le site.\n\nDate et heure : " + dateHeure + "\n\nNous avons besoin d'une aide immédiate : merci de vérifier avec ce membre ce qui s'est passé.\n\n— Système de protection ARAFIN";
+    const autres = EMAILS_AUTORISES.filter(m => m !== (utilisateur ? utilisateur.email : ""));
+    for (const membre of autres) {
+      await emailjs.send("service_ftp46v9", "template_yppb0ss", {
+        to_email: membre,
+        name: "ALERTE SÉCURITÉ — image sensible refusée",
+        email: utilisateur ? utilisateur.email : "",
+        title: "Alerte sécurité — image refusée",
+        message: texte,
+        time: dateHeure
+      });
+    }
+  } catch (e) { /* l'alerte ne doit jamais bloquer le refus */ }
+}
+
 $("ma-photo").addEventListener("change", async () => {
   const fichier = $("ma-photo").files[0];
   if (!fichier) return;
+  $("fiche-msg").textContent = "Analyse de sécurité de l'image en cours…";
   try {
+    const acceptable = await analyserImage(fichier);
+    if (!acceptable) {
+      photoEnAttente = null;
+      $("ma-photo").value = "";
+      $("fiche-msg").textContent = "❌ Image refusée : un contenu sensible (pornographie ou image inappropriée) a été détecté. Le site ARAFIN ne publie pas ce type d'image — choisis une autre photo.";
+alerterConseilImageRefusee();
+return;
+    }
     photoEnAttente = await reduireImage(fichier);
     majApercuPhoto(photoEnAttente);
-    $("fiche-msg").textContent = "Photo prête — clique « Enregistrer ma fiche » pour la publier.";
+    $("fiche-msg").textContent = "Photo vérifiée et prête — clique « Enregistrer ma fiche » pour la publier.";
   } catch (e) {
-    $("fiche-msg").textContent = "Impossible de lire cette image.";
+    photoEnAttente = null;
+    $("fiche-msg").textContent = "L'analyse de sécurité n'a pas pu se faire (connexion ?). Par protection, aucune image n'est acceptée sans vérification — réessaie dans un instant.";
   }
 });
 
