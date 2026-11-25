@@ -30,7 +30,7 @@ const ARAFIN_DATA = {
 // Associés fondateurs (associés commanditaires, Acte Constitutif)
 associes: [
   { nom: "Djenika Neylan",                role: "Resp. des Ressources Humaines", photo: "" },
-  { nom: "Styvenson Jerry Adler Baubrun", role: "Resp. Informaticque",        photo: "" },
+  { nom: "Styvenson Jerry Adler Baubrun", role: "Resp. Informatique",        photo: "" },
   { nom: "Dessailly Youvens Revangile",   role: "Comptable Adjoint",   photo: "" },
   { nom: "Wood-Alens K. B. Alexandre",    role: "Responsable de la Gestion",             photo: "" },
   { nom: "Berdentz Sajous",               role: "Directeur Marketing",           photo: "" }
