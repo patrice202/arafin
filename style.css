@@ -606,3 +606,28 @@ section[id] { scroll-margin-top: 92px; }
 .gal-admin-ligne img { width: 62px; height: 62px; object-fit: cover; border-radius: 10px; border: 2px solid var(--gold); }
 .gal-admin-ligne div { flex: 1; min-width: 0; }
 .gal-admin-ligne small { color: #777; }
+/* ==========================================================
+   RETOUCHES (demande d'Antonio, 25 nov. 2026)
+   1) Textes un peu plus petits
+   2) Boutons qui brillent légèrement au survol
+   ========================================================== */
+
+/* --- 1) Réduction douce des textes --- */
+body { font-size: .95rem; }
+.hero h1 { font-size: clamp(2.1rem, 4.8vw, 3.4rem); }
+h2 { font-size: clamp(1.55rem, 2.8vw, 2.05rem); }
+.hero-sub { font-size: 1.02rem; }
+.card h3 { font-size: 1.18rem; }
+
+/* --- 2) Brillance discrète des boutons --- */
+.btn { position: relative; overflow: hidden; }
+.mz-arrow { overflow: hidden; }
+.btn::after, .mz-arrow::after {
+  content: ""; position: absolute; top: 0; left: -90%;
+  width: 45%; height: 100%; pointer-events: none;
+  background: linear-gradient(105deg, transparent, rgba(255,255,255,.5), transparent);
+  transform: skewX(-20deg); transition: left .55s ease;
+}
+.btn:hover::after, .mz-arrow:hover::after { left: 140%; }
+.btn-gold { box-shadow: 0 10px 24px rgba(198,161,91,.35), inset 0 1px 0 rgba(255,255,255,.55); }
+.btn-gold:hover { box-shadow: 0 14px 30px rgba(198,161,91,.5), inset 0 1px 0 rgba(255,255,255,.55); }
