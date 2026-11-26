@@ -33,6 +33,6 @@ associes: [
   { nom: "Styvenson Jerry Adler Baubrun", role: "Resp. Informatique",        photo: "" },
   { nom: "Dessailly Youvens Revangile",   role: "Comptable Adjoint",   photo: "" },
   { nom: "Wood-Alens K. B. Alexandre",    role: "Resp. de la Gestion",             photo: "" },
-  { nom: "Berdentz Sajous",               role: "Directeur Marketing",           photo: "" }
-]
+{ nom: "Berdentz Sajous",               role: "Directeur Marketing",           photo: "" },
+{ nom: "Fatsendy Saint Pierre",         role: "Resp. des Affaires Juridiques", photo: "" }]
 };

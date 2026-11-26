@@ -127,15 +127,38 @@ $("lien-oublie").addEventListener("click", async e => {
 
 $("btn-logout").addEventListener("click", () => signOut(auth));
 
+/// ---------- Porte PIN du Conseil (premiere porte avant la connexion) ----------
+const PIN_CONSEIL = "2024"; // PIN partage des 5 membres du Conseil
+$("btn-pin").addEventListener("click", verifierPIN);
+$("pin-code").addEventListener("keydown", e => { if (e.key === "Enter") verifierPIN(); });
+function verifierPIN() {
+  if ($("pin-code").value.trim() === PIN_CONSEIL) {
+    sessionStorage.setItem("arafin_pin_ok", "1");
+    $("pin-box").hidden = true;
+    $("login-box").hidden = false;
+    $("pin-msg").textContent = "";
+  } else {
+    $("pin-msg").textContent = "\u274c Code PIN incorrect. Acc\u00e8s refus\u00e9.";
+    $("pin-code").value = "";
+  }
+}
+
 // ---------- État de connexion ----------
 onAuthStateChanged(auth, async user => {
   utilisateur = user;
   if (!user) {
-    $("login-box").hidden = false;
     $("app-box").hidden = true;
+    if (sessionStorage.getItem("arafin_pin_ok") === "1") {
+      $("pin-box").hidden = true;
+      $("login-box").hidden = false;
+    } else {
+      $("pin-box").hidden = false;
+      $("login-box").hidden = true;
+    }
     return;
   }
   $("login-box").hidden = true;
+  $("pin-box").hidden = true;
   $("app-box").hidden = false;
   $("user-email").textContent = user.email;
   $("mon-email").textContent = user.email;

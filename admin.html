@@ -7,9 +7,20 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="admin-body">
- 
+ <!-- Porte PIN du Conseil (premiere porte avant la connexion) -->
+<div id="pin-box" class="admin-box">
+  <h1>ARAFIN</h1>
+  <p>Conseil d'Administration — accès protégé.</p>
+  <label for="pin-code">Code PIN du Conseil (4 chiffres)</label>
+  <input type="password" id="pin-code" inputmode="numeric" maxlength="4" placeholder="••••" autocomplete="off">
+  <div class="admin-row">
+    <button class="btn btn-green" id="btn-pin">Valider le PIN</button>
+    <a class="btn btn-light" style="color:var(--vert);border-color:var(--vert)" href="index.html">← Retour au site</a>
+  </div>
+  <p id="pin-msg" class="msg" style="color:#b91c1c"></p>
+</div>
   <!-- Connexion (compte individuel Firebase) -->
-  <div id="login-box" class="admin-box">
+  <div id="login-box" class="admin-box" hidden></div>
     <h1>ARAFIN</h1>
     <p>Conseil d'Administration.</p>
     <label for="login-email">Adresse email</label>
@@ -127,6 +138,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/nsfwjs@4.2.1/dist/browser/nsfwjs.min.js"></script>
-<script type="module" src="admin.js?v=6"></script>
+<script type="module" src="admin.js?v=7"></script>
 </body>
 </html>
