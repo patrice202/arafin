@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Espace Associés — ARAFIN</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="admin-body">
+
+  <!-- Connexion (compte individuel Firebase) -->
+  <div id="login-box" class="admin-box" hidden>
+    <h1>ARAFIN</h1>
+    <p>Associés Fondateurs.</p>
+    <label for="login-email">Adresse email</label>
+    <input type="email" id="login-email" placeholder="ton@email.com" autocomplete="email">
+    <label for="login-mdp">Mot de passe</label>
+    <input type="password" id="login-mdp" placeholder="Ton mot de passe" autocomplete="current-password">
+    <div class="admin-row">
+      <button class="btn btn-green" id="btn-login">Se connecter</button>
+      <a class="btn btn-light" style="color:var(--vert);border-color:var(--vert)" href="index.html">← Retour au site</a>
+    </div>
+    <p style="margin-top:14px"><a href="#" id="lien-oublie">Mot de passe oublié ?</a>
+    — un email de réinitialisation te sera envoyé.</p>
+    <p id="login-msg" class="msg" style="color:#b91c1c"></p>
+  </div>
+
+  <!-- Espace associé (visible après connexion) -->
+  <div id="app-box" class="admin-box" hidden>
+    <h1>✏️ Espace Associés — ARAFIN</h1>
+    <p>Connecté : <strong id="user-email"></strong>
+    <button class="btn btn-outline" style="color:var(--vert)!important;padding:8px 16px;font-size:.9rem" id="btn-logout">Se déconnecter</button></p>
+    <p>Tes modifications sont publiées <strong>immédiatement</strong> sur le site, pour tout le monde.</p>
+    <p id="app-msg" class="msg"></p>
+
+    <!-- Ma fiche -->
+    <div id="ma-fiche-box">
+      <h2>Ma fiche sur le site</h2>
+      <div class="membre-edit">
+        <p style="margin:0"><strong id="mon-nom"></strong> — <span id="mon-role"></span></p>
+        <img id="ma-photo-apercu" alt="" hidden>
+        <label for="ma-photo">Ma photo (elle sera réduite automatiquement)</label>
+        <input type="file" id="ma-photo" accept="image/*">
+        <label for="ma-bio">Ma biographie courte (optionnel — affichée sous mon rôle sur le site)</label>
+        <textarea id="ma-bio" rows="3" placeholder="Ex : parcours, fonction, domaine d'expertise…"></textarea>
+        <div class="admin-row">
+          <button class="btn btn-green" id="btn-save-fiche">💾 Enregistrer ma fiche</button>
+        </div>
+        <p id="fiche-msg" class="msg"></p>
+      </div>
+    </div>
+
+    <div id="non-associe-box" class="admin-note" hidden>
+      Ton compte n'est associé à aucune fiche d'associé fondateur pour le moment.
+      Demande à l'administrateur du site d'ajouter ton adresse email à ta fiche.
+    </div>
+
+    <!-- Galerie (tous les associés fondateurs) -->
+    <div id="galerie-box">
+      <h2>📷 Galerie du site</h2>
+      <div class="membre-edit">
+        <p style="margin:0">Publie une photo sur la page <strong>Galerie</strong> du site — elle sera visible par tout le monde.
+        Chaque photo est <strong>vérifiée automatiquement</strong> avant publication : aucun contenu sensible ne peut passer.</p>
+        <label for="gal-photo">Photo à publier (elle sera réduite automatiquement)</label>
+        <input type="file" id="gal-photo" accept="image/*">
+        <label for="gal-legende">Légende (optionnel)</label>
+        <input type="text" id="gal-legende" maxlength="200" placeholder="Ex : Visite d'une parcelle à Bas-Boën">
+        <div class="admin-row">
+          <button class="btn btn-green" id="btn-gal-publier">Publier dans la galerie</button>
+        </div>
+        <p id="gal-msg" class="msg"></p>
+        <div id="gal-liste"></div>
+      </div>
+    </div>
+
+    <!-- Mon compte -->
+    <h2>Mon compte</h2>
+    <div class="membre-edit">
+      <p style="margin:0">Adresse email du compte : <strong id="mon-email"></strong></p>
+      <label for="mdp-actuel">Mot de passe actuel</label>
+      <input type="password" id="mdp-actuel" autocomplete="current-password">
+      <label for="mdp-nouveau">Nouveau mot de passe (6 caractères minimum)</label>
+      <input type="password" id="mdp-nouveau" autocomplete="new-password">
+      <label for="mdp-confirme">Confirmer le nouveau mot de passe</label>
+      <input type="password" id="mdp-confirme" autocomplete="new-password">
+      <div class="admin-row">
+        <button class="btn btn-green" id="btn-change-mdp">Changer mon mot de passe</button>
+      </div>
+      <p id="compte-msg" class="msg"></p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/nsfwjs@4.2.1/dist/browser/nsfwjs.min.js"></script>
+  <script type="module" src="espace-associes.js"></script>
+</body>
+</html>
