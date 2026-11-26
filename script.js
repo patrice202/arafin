@@ -29,8 +29,11 @@ function donneesSecours() {
       whatsapp: ARAFIN_DATA.contact.telephone || ""
     },
     conseil: (ARAFIN_DATA.conseil || []).map(m => ({
-      nom: m.nom, role: m.role, photo: m.photo || "", bio: m.bio || ""
-    }))
+  nom: m.nom, role: m.role, photo: m.photo || "", bio: m.bio || ""
+})),
+associes: (ARAFIN_DATA.associes || []).map(m => ({
+  nom: m.nom, role: m.role, photo: m.photo || "", bio: m.bio || ""
+}))
   };
 }
  
@@ -39,10 +42,11 @@ async function donneesFirestore() {
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
  
-  const [snapMembres, snapSite] = await Promise.all([
-    getDocs(query(collection(db, "membres"), orderBy("ordre"))),
-    getDoc(doc(db, "site", "contenu"))
-  ]);
+  const [snapMembres, snapSite, snapAssocies] = await Promise.all([
+  getDocs(query(collection(db, "membres"), orderBy("ordre"))),
+  getDoc(doc(db, "site", "contenu")),
+  getDocs(query(collection(db, "associes"), orderBy("ordre")))
+]);
  
   if (snapMembres.empty) return null; // base pas encore initialisée → data.js
  
@@ -55,6 +59,14 @@ async function donneesFirestore() {
       whatsapp: contenu.whatsapp || ""
     },
     conseil: snapMembres.docs.map(d => {
+  const m = d.data();
+  return { nom: m.nom || "", role: m.role || "", photo: m.photo || "", bio: m.bio || "" };
+}),
+associes: snapAssocies.empty
+  ? (ARAFIN_DATA.associes || []).map(m => ({
+      nom: m.nom, role: m.role, photo: m.photo || "", bio: m.bio || ""
+    }))
+  : snapAssocies.docs.map(d => {
       const m = d.data();
       return { nom: m.nom || "", role: m.role || "", photo: m.photo || "", bio: m.bio || "" };
     })
@@ -92,11 +104,11 @@ if (morceaux.length > 1) {
     div.innerHTML = `${photo}<h3>${echapper(m.nom)}</h3><p class="role">${echapper(m.role)}</p>${attente}${bio}`;
     grid.appendChild(div);
   });
- // Associés fondateurs (contenu fixe : data.js)
+ // Associés fondateurs (Firestore, sinon data.js)
 const gridA = document.getElementById("associes-grid");
 if (gridA) {
   gridA.innerHTML = "";
-  (ARAFIN_DATA.associes || []).forEach((m, i) => {
+  (data.associes || []).forEach((m, i) => {
     const div = document.createElement("div");
     div.className = "membre membre-associe reveal";
     div.style.transitionDelay = (i * 90) + "ms";
@@ -105,7 +117,14 @@ if (gridA) {
       ? `<img src="${echapper(m.photo)}" alt="Photo de ${echapper(m.nom)}">`
       : `<div class="initiales">${echapper(initiales(m.nom))}</div>`;
     const attente = aPhoto ? "" : `<span class="attente">Photo à venir</span>`;
-    div.innerHTML = `${photo}<h3>${echapper(m.nom)}</h3><p class="role">${echapper(m.role)}</p>${attente}`;
+    const morceauxA = (m.bio || "").split(/\n|•/).map(s => s.trim()).filter(s => s !== "");
+    let bioA = "";
+    if (morceauxA.length > 1) {
+      bioA = `<ul class="bio-list">${morceauxA.map(s => `<li>${echapper(s)}</li>`).join("")}</ul>`;
+    } else if (morceauxA.length === 1) {
+      bioA = `<p class="bio">${echapper(morceauxA[0])}</p>`;
+    }
+    div.innerHTML = `${photo}<h3>${echapper(m.nom)}</h3><p class="role">${echapper(m.role)}</p>${attente}${bioA}`;
     gridA.appendChild(div);
   });
 }

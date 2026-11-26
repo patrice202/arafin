@@ -129,10 +129,17 @@ $("btn-logout").addEventListener("click", () => signOut(auth));
 
 /// ---------- Porte PIN du Conseil (premiere porte avant la connexion) ----------
 const PIN_CONSEIL = "2024"; // PIN partage des 5 membres du Conseil
+const PIN_ASSOCIES = "2086"; // PIN partage des associés fondateurs
 $("btn-pin").addEventListener("click", verifierPIN);
 $("pin-code").addEventListener("keydown", e => { if (e.key === "Enter") verifierPIN(); });
 function verifierPIN() {
-  if ($("pin-code").value.trim() === PIN_CONSEIL) {
+  const code = $("pin-code").value.trim();
+  if (code === PIN_ASSOCIES) {
+    sessionStorage.setItem("arafin_pin_associes", "1");
+    window.location.href = "espace-associes.html";
+    return;
+  }
+  if (code === PIN_CONSEIL) {
     sessionStorage.setItem("arafin_pin_ok", "1");
     $("pin-box").hidden = true;
     $("login-box").hidden = false;
