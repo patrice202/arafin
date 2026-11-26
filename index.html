@@ -293,5 +293,151 @@
  <button id="to-top" aria-label="Retour en haut" title="Retour en haut"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg></button>
   <script src="data.js"></script>
 <script type="module" src="script.js?v=12"></script>
+<!-- ============================================================
+     ASSISTANT IA — widget flottant (bas droite) pour arafinhaiti.com
+     Bloc autonome : a coller dans index.html juste AVANT </body>.
+     Cle API : remplacer COLLE_TA_CLE_ICI par la cle Gemini « Site IA »
+     (la meme que celle du site ia.arafinhaiti.com).
+     ============================================================ -->
+<style>
+  .iaw-btn { position: fixed; right: 20px; bottom: 20px; z-index: 999; width: 60px; height: 60px; border-radius: 50%; border: 2px solid #c6a15b; background: #0a3524; color: #c6a15b; cursor: pointer; box-shadow: 0 12px 28px rgba(6,35,26,.35); display: flex; align-items: center; justify-content: center; transition: transform .2s ease, background .2s ease; }
+  .iaw-btn:hover { transform: translateY(-2px); background: #0e4630; }
+  .iaw-panel { position: fixed; right: 20px; bottom: 92px; z-index: 999; width: min(92vw, 372px); height: min(70vh, 540px); background: #fffdf8; border: 1px solid #e4ddcb; border-radius: 18px; box-shadow: 0 24px 50px rgba(6,35,26,.28); display: flex; flex-direction: column; overflow: hidden; font-family: "Inter", "Segoe UI", Arial, sans-serif; }
+  .iaw-panel[hidden] { display: none; }
+  .iaw-head { background: #0a3524; color: #fff; padding: 13px 16px; display: flex; align-items: center; justify-content: space-between; }
+  .iaw-head strong { font-family: "Fraunces", Georgia, serif; font-size: 1.02rem; letter-spacing: .4px; }
+  .iaw-head small { display: block; color: #c6a15b; font-size: .7rem; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; margin-top: 1px; }
+  .iaw-close { background: none; border: none; color: #fff; font-size: 1.3rem; line-height: 1; cursor: pointer; padding: 2px 6px; }
+  .iaw-messages { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; background: #fffdf8; }
+  .iaw-msg { max-width: 86%; padding: 9px 13px; border-radius: 14px; line-height: 1.5; font-size: .9rem; word-wrap: break-word; }
+  .iaw-msg.iaw-user { align-self: flex-end; background: #0a3524; color: #fff; border-bottom-right-radius: 4px; }
+  .iaw-msg.iaw-bot { align-self: flex-start; background: #edf2e9; color: #14231b; border: 1px solid #e4ddcb; border-bottom-left-radius: 4px; }
+  .iaw-attente { align-self: flex-start; color: #5d6f63; font-style: italic; font-size: .85rem; padding: 2px 4px; }
+  .iaw-form { display: flex; gap: 8px; padding: 10px; border-top: 1px solid #e4ddcb; background: #fff; }
+  .iaw-form textarea { flex: 1; resize: none; border: 1px solid #e4ddcb; border-radius: 10px; padding: 9px 11px; font: inherit; font-size: .9rem; max-height: 96px; background: #fffdf8; color: #14231b; }
+  .iaw-form textarea:focus { outline: 2px solid #c6a15b; border-color: transparent; }
+  .iaw-form button { border: none; border-radius: 10px; background: #c6a15b; color: #2a1f05; font-weight: 700; padding: 0 16px; cursor: pointer; font-size: .9rem; }
+  .iaw-form button:disabled { opacity: .55; }
+  @media (max-width: 620px) { .iaw-btn { right: 14px; bottom: 14px; } .iaw-panel { right: 10px; bottom: 84px; } }
+</style>
+
+<button class="iaw-btn" id="iaw-btn" type="button" aria-label="Ouvrir l'assistant IA" title="Assistant IA">
+  <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+</button>
+
+<div class="iaw-panel" id="iaw-panel" hidden>
+  <div class="iaw-head">
+    <div><strong>Assistant IA</strong><small>Service gratuit ARAFIN</small></div>
+    <button class="iaw-close" id="iaw-close" type="button" aria-label="Fermer">×</button>
+  </div>
+  <div class="iaw-messages" id="iaw-messages">
+    <div class="iaw-msg iaw-bot">Bonjour ! Je suis l'assistant IA d'ARAFIN, offert gratuitement au public. Posez-moi votre question — je réponds dans votre langue.</div>
+  </div>
+  <div class="iaw-form">
+    <textarea id="iaw-input" rows="1" placeholder="Écrivez votre question ici…"></textarea>
+    <button id="iaw-send" type="button">Envoyer</button>
+  </div>
+</div>
+
+<script>
+  // ================= ASSISTANT IA (widget) — Gemini =================
+  const IAW_CLE = "AQ.Ab8RN6IEUYr561ckCnLmtidU_jBZUwkPqaBz6_6f_Vv4_XZjxA";
+  const IAW_MODELE = "gemini-flash-lite-latest";
+  const IAW_INSTRUCTION = "Tu es l'assistant IA public d'ARAFIN (ARTI Agro Finance, Haiti), offert gratuitement au public. "
+    + "Tu es un assistant general : tu aides sur tous les sujets (etudes, devoirs, redaction, calculs, travail, conseils, agriculture, vie quotidienne). "
+    + "Reponds TOUJOURS dans la langue de la question (francais, anglais, creole haitien ou espagnol). "
+    + "Sois clair, utile, respectueux et pas trop long. "
+    + "IMPORTANT : tu n'as pas acces a internet en direct et tes connaissances ont une date limite. Pour les sujets d'actualite (politique, nouvelles, prix, evenements recents), dis honnetement que tes informations peuvent ne pas etre a jour et invite la personne a verifier. "
+    + "Si on te demande qui tu es, dis que tu es l'assistant IA offert par ARAFIN.";
+
+  (function () {
+    const btn = document.getElementById("iaw-btn");
+    const panel = document.getElementById("iaw-panel");
+    const closeBtn = document.getElementById("iaw-close");
+    const zone = document.getElementById("iaw-messages");
+    const champ = document.getElementById("iaw-input");
+    const bouton = document.getElementById("iaw-send");
+    let historique = [];
+    let enCours = false;
+
+    btn.addEventListener("click", function () {
+      panel.hidden = !panel.hidden;
+      if (!panel.hidden) champ.focus();
+    });
+    closeBtn.addEventListener("click", function () { panel.hidden = true; });
+
+    function echapper(t) {
+      return t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+    function formater(t) {
+      return echapper(t)
+        .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+        .replace(/\n/g, "<br>");
+    }
+    function ajouterMessage(texte, qui) {
+      const div = document.createElement("div");
+      div.className = "iaw-msg " + (qui === "user" ? "iaw-user" : "iaw-bot");
+      div.innerHTML = qui === "user" ? echapper(texte).replace(/\n/g, "<br>") : formater(texte);
+      zone.appendChild(div);
+      zone.scrollTop = zone.scrollHeight;
+      return div;
+    }
+
+    async function envoyer() {
+      const texte = champ.value.trim();
+      if (!texte || enCours) return;
+      if (IAW_CLE === "COLLE_TA_CLE_ICI") {
+        ajouterMessage("L'assistant n'est pas encore activé (clé manquante). Revenez bientôt !", "bot");
+        return;
+      }
+      enCours = true;
+      bouton.disabled = true;
+      ajouterMessage(texte, "user");
+      champ.value = "";
+      const attente = document.createElement("div");
+      attente.className = "iaw-attente";
+      attente.textContent = "L'assistant réfléchit…";
+      zone.appendChild(attente);
+      zone.scrollTop = zone.scrollHeight;
+
+      const contents = historique.concat([{ role: "user", texte }])
+        .map(m => ({ role: m.role, parts: [{ text: m.texte }] }));
+
+      try {
+        const reponse = await fetch(
+          "https://generativelanguage.googleapis.com/v1beta/models/" + IAW_MODELE + ":generateContent",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "x-goog-api-key": IAW_CLE },
+            body: JSON.stringify({
+              system_instruction: { parts: [{ text: IAW_INSTRUCTION }] },
+              contents: contents
+            })
+          }
+        );
+        const data = await reponse.json();
+        attente.remove();
+        if (!reponse.ok) throw new Error((data.error && data.error.message) || "Erreur");
+        const sortie = data.candidates && data.candidates[0] && data.candidates[0].content
+          && data.candidates[0].content.parts.map(p => p.text || "").join("");
+        if (!sortie) throw new Error("Réponse vide");
+        ajouterMessage(sortie, "bot");
+        historique.push({ role: "user", texte }, { role: "model", texte: sortie });
+        if (historique.length > 20) historique = historique.slice(-20);
+      } catch (e) {
+        attente.remove();
+        ajouterMessage("Désolé, je n'ai pas pu répondre (connexion ou limite gratuite atteinte). Réessayez dans un moment.", "bot");
+      }
+      enCours = false;
+      bouton.disabled = false;
+      champ.focus();
+    }
+
+    bouton.addEventListener("click", envoyer);
+    champ.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); envoyer(); }
+    });
+  })();
+</script>
 </body>
 </html>
