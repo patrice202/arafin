@@ -62,14 +62,32 @@ async function donneesFirestore() {
   const m = d.data();
   return { nom: m.nom || "", role: m.role || "", photo: m.photo || "", bio: m.bio || "" };
 }),
-associes: snapAssocies.empty
-  ? (ARAFIN_DATA.associes || []).map(m => ({
-      nom: m.nom, role: m.role, photo: m.photo || "", bio: m.bio || ""
-    }))
-  : snapAssocies.docs.map(d => {
-      const m = d.data();
-      return { nom: m.nom || "", role: m.role || "", photo: m.photo || "", bio: m.bio || "" };
-    })
+associes: (() => {
+  // Fusion : la liste complète vient de data.js (les 6 associés) ;
+  // Firestore écrase la fiche des associés déjà activés (photo et
+  // bio à jour depuis leur Espace Associés) et ajoute ceux qui ne
+  // sont pas encore dans data.js. Sans ça, dès qu'un seul associé
+  // est activé dans Firestore, les autres disparaissent du site.
+  const base = (ARAFIN_DATA.associes || []).map(m => ({
+    nom: m.nom, role: m.role, photo: m.photo || "", bio: m.bio || ""
+  }));
+  snapAssocies.docs.forEach(d => {
+    const m = d.data();
+    const fiche = { nom: m.nom || "", role: m.role || "", photo: m.photo || "", bio: m.bio || "" };
+    const i = base.findIndex(b => b.nom.toLowerCase() === fiche.nom.toLowerCase());
+    if (i >= 0) {
+      base[i] = {
+        nom: fiche.nom || base[i].nom,
+        role: fiche.role || base[i].role,
+        photo: fiche.photo || base[i].photo,
+        bio: fiche.bio
+      };
+    } else {
+      base.push(fiche);
+    }
+  });
+  return base;
+})()
   };
 }
  
